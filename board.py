@@ -17,6 +17,8 @@ class Board:
             for c in range(self.grid_size):
                 self.tiles.append(Tile(r, c))
 
-    def render_board(self):
+    def draw_board(self):
         for tile in self.tiles:
-            tile.render(self.window)
+            tile.draw(self.window)
+
+       

@@ -8,5 +8,5 @@ class Menu:
         self.starting_player = 'X'
         self.start_game = False
 
-    def render_menu(self):
+    def draw_menu(self):
         self.start_game = True
