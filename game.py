@@ -6,16 +6,6 @@ import sys
 import os
 
 class Game:
-    X_IMAGE = pg.image.load(os.path.join('Assets', 'x.png'))
-    O_IMAGE = pg.image.load(os.path.join('Assets', 'o.png'))
-    PODIUM_IMAGE = pg.image.load(os.path.join('Assets', 'podium.png'))
-
-    # resize images
-    X_IMAGE = pg.transform.scale(X_IMAGE, (200,200))
-    O_IMAGE = pg.transform.scale(O_IMAGE, (200,200))
-    PODIUM_IMAGE = pg.transform.scale(PODIUM_IMAGE, (600 * .80, 600 * .80))
-
-
     def __init__(self):
         pg.init()
         self.window = pg.display.set_mode((config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
@@ -26,6 +16,7 @@ class Game:
         self.board = Board(self.window, self.menu.grid_size)
         self.board.init_tiles()
         self.running = True
+        self.pause_game = False
 
     def run(self):
         '''Game runnning loop'''
@@ -43,8 +34,16 @@ class Game:
                     pass
 
                 if self.game_state == "board":
-                    self.current_player = self.board.click(pg.mouse.get_pos(), self.current_player)
-
+                    if not self.pause_game:
+                        self.current_player = self.board.click(pg.mouse.get_pos(), self.current_player)
+                        if self.board.check_win():
+                            self.pause_game = True
+                            print(f"Player {'O' if self.current_player == 'X' else 'X'!r} WON - SCORE: {1 + self.board.open_tile_count}")
+                        
+                        if self.board.check_draw():
+                            self.pause_game = True
+                            print("DRAW")
+                    
                 if self.game_state == "score":
                     pass
 
