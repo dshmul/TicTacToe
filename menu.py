@@ -1,5 +1,7 @@
 import config
+from tile import Tile
 import pygame as pg
+import os
 
 class Menu:
     def __init__(self, window):

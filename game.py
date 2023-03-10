@@ -16,7 +16,7 @@ class Game:
         self.board = Board(self.window, self.menu.grid_size)
         self.board.init_tiles()
         self.running = True
-        self.pause_game = False
+        self.pause_grid = False
 
     def run(self):
         '''Game runnning loop'''
@@ -34,15 +34,19 @@ class Game:
                     pass
 
                 if self.game_state == "board":
-                    if not self.pause_game:
-                        self.current_player = self.board.click(pg.mouse.get_pos(), self.current_player)
+                    if not self.pause_grid:
+                        self.current_player, self.game_state = self.board.click(pg.mouse.get_pos(), self.current_player)
+                        
                         if self.board.check_win():
-                            self.pause_game = True
+                            self.pause_grid = True
                             print(f"Player {'O' if self.current_player == 'X' else 'X'!r} WON - SCORE: {1 + self.board.open_tile_count}")
                         
-                        if self.board.check_draw():
-                            self.pause_game = True
+                        elif self.board.check_draw():
+                            self.pause_grid = True
                             print("DRAW")
+                    else:
+                        self.board.init_tiles()
+                        self.pause_grid = False
                     
                 if self.game_state == "score":
                     pass
@@ -56,7 +60,7 @@ class Game:
 
         if self.game_state == "menu":
             self.menu.draw_menu()
-    
+
             if self.menu.start_game:
                 self.game_state = "board"
 

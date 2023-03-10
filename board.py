@@ -2,6 +2,7 @@ import config
 from tile import Tile
 import pygame as pg
 import numpy as np
+import os
 
 class Board:
     def __init__(self, window, grid_size):
@@ -9,10 +10,10 @@ class Board:
         self.grid_size = grid_size
         self.tiles = []
         self.open_tile_count = 0
-        self.tile_size = config.WINDOW_WIDTH // grid_size
+        Tile.tile_size = config.WINDOW_WIDTH // grid_size
 
     def init_tiles(self):
-        Tile.tile_size = self.tile_size
+        self.tiles.clear()
         self.open_tile_count = self.grid_size ** 2
 
         for r in range(self.grid_size):
@@ -23,16 +24,27 @@ class Board:
         for tile in self.tiles:
             tile.draw(self.window)
 
+        # TODO: remove hardcoding
+        podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
+        podium_img = pg.transform.scale(podium_img, (80, 80))
+        self.window.blit(podium_img, (510, 610))
+
     def click(self, mouse_pos, player):
         # check if mouse is on tiles
         if 0 <= mouse_pos[0] <= config.WINDOW_WIDTH and 0 <= mouse_pos[1] <= config.WINDOW_WIDTH: 
-            col = mouse_pos[0] // self.tile_size
-            row = mouse_pos[1] // self.tile_size
+            col = mouse_pos[0] // Tile.tile_size
+            row = mouse_pos[1] // Tile.tile_size
             tile_idx = self.grid_size * row + col
             if self.tiles[tile_idx].update_marking(player):
                 self.open_tile_count -= 1
-                return 'O' if player == 'X' else 'X'
-        return player
+                return 'O' if player == 'X' else 'X', "board"
+            
+        # TODO: remove hardcoding
+        # scoreboard button
+        elif 510 <= mouse_pos[0] <= 590 and 610 <= mouse_pos[1] <= 690:
+            return player, "score"
+
+        return player, "board"
     
     def check_draw(self):
         return True if self.open_tile_count <= 0 else False
