@@ -21,4 +21,13 @@ class Board:
         for tile in self.tiles:
             tile.draw(self.window)
 
-       
+    def click(self, mouse_pos, player):
+        # check if mouse is on tiles
+        if 0 <= mouse_pos[0] <= config.WINDOW_WIDTH and 0 <= mouse_pos[1] <= config.WINDOW_WIDTH: 
+            col = mouse_pos[0] // self.tile_size
+            row = mouse_pos[1] // self.tile_size
+            tile_idx = self.grid_size * row + col
+            if self.tiles[tile_idx].update_marking(player):
+                return 'O' if player == 'X' else 'X'
+            
+        return player

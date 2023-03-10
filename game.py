@@ -22,6 +22,7 @@ class Game:
         pg.display.set_caption(config.TITLE)
         self.game_state = "menu" 
         self.menu = Menu(self.window)
+        self.current_player = self.menu.starting_player
         self.board = Board(self.window, self.menu.grid_size)
         self.board.init_tiles()
         self.running = True
@@ -38,7 +39,15 @@ class Game:
         '''Event handler'''
         for event in pg.event.get():
             if event.type == pg.MOUSEBUTTONDOWN:
-                pass
+                if self.game_state == "menu":
+                    pass
+
+                if self.game_state == "board":
+                    self.current_player = self.board.click(pg.mouse.get_pos(), self.current_player)
+
+                if self.game_state == "score":
+                    pass
+
             if event.type == pg.QUIT:
                 self.quit()
             
@@ -48,14 +57,14 @@ class Game:
 
         if self.game_state == "menu":
             self.menu.draw_menu()
-        
+    
             if self.menu.start_game:
-                self.game_state = "game"
+                self.game_state = "board"
 
-        elif self.game_state == "game":
+        elif self.game_state == "board":
             self.board.draw_board()
-        
-        elif self.game_state == "scoreboard":
+
+        elif self.game_state == "score":
             pass
 
         pg.display.update()

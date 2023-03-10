@@ -1,6 +1,7 @@
 # Display settings
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 700
+TILE_SCALE = 0.85
 TITLE = "Tick Tack Toe"
 FPS = 60
 
