@@ -24,6 +24,7 @@ class Scoreboard(db.Model):
     user_id = db.Column(db.String(100), primary_key=True)
     date = db.Column(db.String())
     score = db.Column(db.Integer)
+    grid_size = db.Column(db.Integer, nullable=False) # 3: 3x3, 10: 10x10
 
 '''To init db from python terminal
 from api import db
@@ -52,8 +53,7 @@ def token_required(f):
     return decorated
     
 @app.route('/user', methods=['GET'])
-@token_required
-def get_all_users(current_user):
+def get_all_users():
     users = User.query.all()
 
     output = []
@@ -67,8 +67,7 @@ def get_all_users(current_user):
     return jsonify({'users': output})
 
 @app.route('/user/<public_id>', methods=['GET'])
-@token_required
-def get_one_user(current_user, public_id):
+def get_one_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
@@ -82,9 +81,8 @@ def get_one_user(current_user, public_id):
     return jsonify({'user': user_data})
 
 @app.route('/user', methods=['POST'])
-@token_required
-def create_user(current_user):
-    data = request.get_json()
+def create_user():
+    data = request.get_json() # expects {"name": <name>, "password": <password>}
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
@@ -125,6 +123,33 @@ def login():
         return jsonify({'token': token})
     
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Requred."'})
+
+@app.route('/score', methods=['POST'])
+@token_required
+def add_score(current_user):
+    data = request.get_json() # expects {"score": <score>, "grid_size": <grid_size>} 
+
+    new_score = Scoreboard(user_id=current_user.public_id, date=datetime.datetime.now(), score=data['score'], grid_size=data['grid_size'])
+    db.session.add(new_score)
+    db.session.commit()
+
+    return jsonify({'message': 'New score added.'})
+
+@app.route('/score', methods=['GET'])
+def get_all_scores():
+    scores = Scoreboard.query.all()
+
+    output = []
+    for score in scores:
+        score_data = {}
+        score_data['user_id'] = score.user_id
+        score_data['date'] = score.date
+        score_data['score'] = score.score
+        score_data['grid_size'] = score.grid_size
+        output.append(score_data)
+
+    return jsonify({'users': output})
+
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
