@@ -43,15 +43,19 @@ def token_required(f):
         if not token:
             return jsonify({'message': 'Token is missing.'}, 401)
         
-        try: # TODO: fix error
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"]) # resulting in jwt.exceptions.ExpiredSignatureError: Signature has expired
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
-            return jsonify({'message', 'Token is invalid.'}, 401)
+            return jsonify({'message': 'Token is invalid.'}, 401)
         
         return f(current_user, *args, **kwargs)
 
     return decorated
+
+@app.route('/', methods=['GET'])
+def connected():
+    return jsonify({'message': 'API accessible.'})
     
 @app.route('/user', methods=['GET'])
 def get_all_users():
@@ -119,7 +123,8 @@ def login():
         return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Requred."'})
     
     if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, \
+                           app.config['SECRET_KEY'])
 
         return jsonify({'token': token})
     
@@ -168,7 +173,8 @@ def get_user_score(current_user, grid_size):
 @app.route('/scoreboard/<grid_size>', methods=['GET']) # scoreboard defines queries with join
 def get_grid_scoreboard(grid_size):
     entries = db.session.query(Score.user_id, Score.date, Score.score, Score.grid_size, User.public_id, User.name)\
-        .select_from(Score).join(User, Score.user_id==User.public_id).order_by(Score.score.desc()).limit(10).all()
+        .select_from(Score).filter_by(grid_size=grid_size).join(User, Score.user_id==User.public_id)\
+            .order_by(Score.score.desc()).limit(10).all()
 
     if not entries:
         return jsonify({'message': 'No entries found.'})

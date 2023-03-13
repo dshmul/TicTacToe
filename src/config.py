@@ -9,3 +9,12 @@ FPS = 60
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
+DARK_GRAY = (95, 95, 95)
+
+# Presets
+TITLE_SIZE = 30
+HEADER_SIZE = 20
+TEXT_SIZE = 15
+
+# API 
+API_ADDR = "http://127.0.0.1:8000/"

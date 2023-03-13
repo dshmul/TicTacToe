@@ -1,6 +1,7 @@
 import config
 from menu import Menu
 from board import Board
+from scoreboard import Scoreboard
 import pygame as pg
 import sys
 
@@ -13,6 +14,7 @@ class Game:
         self.menu = Menu(self.window)
         self.current_player = self.menu.starting_player
         self.board = Board(self.window, self.menu.grid_size)
+        self.scoreboard = Scoreboard(self.window)
         self.board.init_tiles()
         self.running = True
         self.pause_grid = False
@@ -56,18 +58,20 @@ class Game:
     def render(self):
         '''Render window depending on game state'''
         self.window.fill(config.WHITE)
+        
+        self.scoreboard.draw_scoreboard()
 
-        if self.game_state == "menu":
-            self.menu.draw_menu()
+        # if self.game_state == "menu":
+        #     self.menu.draw_menu()
 
-            if self.menu.start_game:
-                self.game_state = "board"
+        #     if self.menu.start_game:
+        #         self.game_state = "board"
 
-        elif self.game_state == "board":
-            self.board.draw_board()
+        # elif self.game_state == "board":
+        #     self.board.draw_board()
 
-        elif self.game_state == "score":
-            pass
+        # elif self.game_state == "score":
+        #     self.scoreboard.draw_scoreboard()
 
         pg.display.update()
 

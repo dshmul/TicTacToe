@@ -30,7 +30,7 @@ class Board:
         self.window.blit(podium_img, (510, 610))
 
     def click(self, mouse_pos, player):
-        # check if mouse is on tiles
+        # check if click is on tiles
         if 0 <= mouse_pos[0] <= config.WINDOW_WIDTH and 0 <= mouse_pos[1] <= config.WINDOW_WIDTH: 
             col = mouse_pos[0] // Tile.tile_size
             row = mouse_pos[1] // Tile.tile_size
