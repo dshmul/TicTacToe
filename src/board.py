@@ -5,6 +5,10 @@ import numpy as np
 import os
 
 class Board:
+    MENU_BUTTON_SCALE_FACTOR = .075
+    RESTART_BUTTON_SCALE_FACTOR = .25
+    START_BUTTON_SCALE_FACTOR = .125
+
     def __init__(self, window, grid_size):
         self.window = window
         self.grid_size = grid_size
@@ -16,13 +20,26 @@ class Board:
         self.popup = pg.Rect((0, 0), (400, 400))
         self.popup.center = (config.WINDOW_WIDTH // 2, config.WINDOW_WIDTH // 2)
 
+        self.menu_img = pg.image.load(os.path.join('Assets', 'menu.png'))
+        self.menu_button = pg.transform.scale(self.menu_img, (self.menu_img.get_width() * Board.MENU_BUTTON_SCALE_FACTOR,\
+                                                              self.menu_img.get_height() * Board.MENU_BUTTON_SCALE_FACTOR))
+        self.menu_button_rect = self.menu_button.get_rect()
+        self.menu_button_rect.center = (40, 650)
+
+        self.restart_img = pg.image.load(os.path.join('Assets', 'restart.png'))
+        self.restart_button = pg.transform.scale(self.restart_img, (self.restart_img.get_width() * Board.RESTART_BUTTON_SCALE_FACTOR,\
+                                                                  self.restart_img.get_height() * Board.RESTART_BUTTON_SCALE_FACTOR))
+        self.restart_button_rect = self.restart_button.get_rect()
+        self.restart_button_rect.center = (100, 650)
+
         self.podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
         self.podium_button = pg.transform.scale(self.podium_img, (80, 80))
         self.podium_button_rect = self.podium_button.get_rect()
         self.podium_button_rect.center = (550, 650)
 
         self.start_img = pg.image.load(os.path.join('Assets', 'start.png'))
-        self.start_button = pg.transform.scale(self.start_img, (self.start_img.get_width() * .125, self.start_img.get_height() * .125))
+        self.start_button = pg.transform.scale(self.start_img, (self.start_img.get_width() * Board.START_BUTTON_SCALE_FACTOR,\
+                                                                self.start_img.get_height() * Board.START_BUTTON_SCALE_FACTOR))
         self.start_button_rect = self.start_button.get_rect()
         self.start_button_rect.center = (config.WINDOW_WIDTH // 2, 400)
 
@@ -38,6 +55,8 @@ class Board:
         for tile in self.tiles:
             tile.draw(self.window)
 
+        self.window.blit(self.menu_button, self.menu_button_rect)
+        self.window.blit(self.restart_button, self.restart_button_rect)
         self.window.blit(self.podium_button, self.podium_button_rect)
 
     def draw_popup(self, text):
@@ -51,7 +70,7 @@ class Board:
         
     def grid_click(self, mouse_pos, player):
         # check if click is on tiles
-        if 0 <= mouse_pos[0] <= config.WINDOW_WIDTH and 0 <= mouse_pos[1] <= config.WINDOW_WIDTH: 
+        if 0 <= mouse_pos[0] < config.WINDOW_WIDTH and 0 <= mouse_pos[1] < config.WINDOW_WIDTH: 
             col = mouse_pos[0] // Tile.tile_size
             row = mouse_pos[1] // Tile.tile_size
             tile_idx = self.grid_size * row + col
@@ -67,12 +86,13 @@ class Board:
         return False
             
     def options_click(self, mouse_pos):
-        # TODO: remove hardcoding
-        # scoreboard button
         x, y = mouse_pos
-        if 510 <= mouse_pos[0] <= 590 and 610 <= mouse_pos[1] <= 690:
+        if self.menu_button_rect.collidepoint(x, y):
+            return "menu"
+        elif self.restart_button_rect.collidepoint(x, y): #TODO: make sure logical
+            self.init_tiles()
+        elif self.podium_button_rect.collidepoint(x, y):
             return "score"
-
         return "board"
     
     def check_draw(self):

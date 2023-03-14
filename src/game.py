@@ -33,8 +33,8 @@ class Game:
         '''Event handler'''
         for event in pg.event.get():
             if event.type == pg.MOUSEBUTTONDOWN:
-                if self.window_state == "menu":
-                    self.menu.click(pg.mouse.get_pos())
+                if self.window_state == "menu" and self.menu.api_connection:
+                    self.window_state = self.menu.click(pg.mouse.get_pos())
 
                 if self.window_state == "board":
                     if pg.mouse.get_pos()[1] <= config.WINDOW_WIDTH:
@@ -61,9 +61,6 @@ class Game:
 
         if self.window_state == "menu":
             self.menu.draw_menu()
-
-            if self.menu.start_game:
-                self.window_state = "board"
 
         elif self.window_state == "board":
             self.board.draw_board()
