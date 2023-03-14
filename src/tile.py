@@ -1,4 +1,4 @@
-import config
+from src import config
 import pygame as pg
 import os
 

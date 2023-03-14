@@ -1,5 +1,5 @@
-import config
-from tile import Tile
+from src import config
+from src.tile import Tile
 import pygame as pg
 import numpy as np
 import os
@@ -11,6 +11,20 @@ class Board:
         self.tiles = []
         self.open_tile_count = 0
         Tile.tile_size = config.WINDOW_WIDTH // grid_size
+
+        self.font = pg.font.Font(pg.font.get_default_font(), config.TEXT_SIZE)
+        self.popup = pg.Rect((0, 0), (400, 400))
+        self.popup.center = (config.WINDOW_WIDTH // 2, config.WINDOW_WIDTH // 2)
+
+        self.podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
+        self.podium_button = pg.transform.scale(self.podium_img, (80, 80))
+        self.podium_button_rect = self.podium_button.get_rect()
+        self.podium_button_rect.center = (550, 650)
+
+        self.start_img = pg.image.load(os.path.join('Assets', 'start.png'))
+        self.start_button = pg.transform.scale(self.start_img, (self.start_img.get_width() * .125, self.start_img.get_height() * .125))
+        self.start_button_rect = self.start_button.get_rect()
+        self.start_button_rect.center = (config.WINDOW_WIDTH // 2, 400)
 
     def init_tiles(self):
         self.tiles.clear()
@@ -24,12 +38,18 @@ class Board:
         for tile in self.tiles:
             tile.draw(self.window)
 
-        # TODO: remove hardcoding
-        podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
-        podium_img = pg.transform.scale(podium_img, (80, 80))
-        self.window.blit(podium_img, (510, 610))
+        self.window.blit(self.podium_button, self.podium_button_rect)
 
-    def click(self, mouse_pos, player):
+    def draw_popup(self, text):
+        text = self.font.render(text, True, config.BLACK)
+        text_rect = text.get_rect()
+        text_rect.center = self.popup.center
+        pg.draw.rect(self.window, config.GRAY, self.popup, 200, 50, 50, 50, 50)
+        self.window.blit(text, text_rect)
+
+        self.window.blit(self.start_button, self.start_button_rect)
+        
+    def grid_click(self, mouse_pos, player):
         # check if click is on tiles
         if 0 <= mouse_pos[0] <= config.WINDOW_WIDTH and 0 <= mouse_pos[1] <= config.WINDOW_WIDTH: 
             col = mouse_pos[0] // Tile.tile_size
@@ -37,14 +57,23 @@ class Board:
             tile_idx = self.grid_size * row + col
             if self.tiles[tile_idx].update_marking(player):
                 self.open_tile_count -= 1
-                return 'O' if player == 'X' else 'X', "board"
+                
+        return "board"
+    
+    def popup_click(self, mouse_pos):
+        x, y = mouse_pos
+        if self.start_button_rect.collidepoint(x, y):
+            return True
+        return False
             
+    def options_click(self, mouse_pos):
         # TODO: remove hardcoding
         # scoreboard button
-        elif 510 <= mouse_pos[0] <= 590 and 610 <= mouse_pos[1] <= 690:
-            return player, "score"
+        x, y = mouse_pos
+        if 510 <= mouse_pos[0] <= 590 and 610 <= mouse_pos[1] <= 690:
+            return "score"
 
-        return player, "board"
+        return "board"
     
     def check_draw(self):
         return True if self.open_tile_count <= 0 else False
