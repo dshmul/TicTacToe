@@ -32,6 +32,7 @@ class User:
     def logout(self):
         self.username = ""
         self.token = ""
+        self.logged_in = False
 
     def validate_token(self):
         reply = requests.get(config.API_ADDR + "validate_token", headers={"x-access-token": self.token}).json()

@@ -14,7 +14,7 @@ class Game:
         self.window_state = "menu" 
         self.menu = Menu(self.window)
         self.current_player = self.menu.starting_player
-        self.board = Board(self.window, self.menu.grid_size)
+        self.board = Board(self.window, self.menu.grid_size, self.menu)
         self.scoreboard = Scoreboard(self.window)
         self.board.init_tiles()
         self.running = True
