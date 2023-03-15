@@ -196,11 +196,13 @@ class Menu:
         else:
             self.start_game = False
 
-        # TODO: send grid_size to board
-        if self.grid_3_button_rect.collidepoint(x, y):
+        # TODO: refresh board
+        if self.grid_size == 10 and self.grid_3_button_rect.collidepoint(x, y):
             self.grid_size = 3
-        elif self.grid_10_button_rect.collidepoint(x, y):
+            return "update_board"
+        elif self.grid_size == 3 and self.grid_10_button_rect.collidepoint(x, y):
             self.grid_size = 10
+            return "update_board"
             
         if self.start_button_rect.collidepoint(x, y) and self.start_game:
             return "board"

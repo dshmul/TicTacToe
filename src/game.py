@@ -14,7 +14,7 @@ class Game:
         self.window_state = "menu" 
         self.menu = Menu(self.window)
         self.current_player = self.menu.starting_player
-        self.board = Board(self.window, self.menu.grid_size, self.menu)
+        self.board = Board(self.window, self.menu)
         self.scoreboard = Scoreboard(self.window)
         self.board.init_tiles()
         self.running = True
@@ -36,8 +36,12 @@ class Game:
             if event.type == pg.MOUSEBUTTONDOWN:
                 if self.window_state == "menu" and self.menu.api_connection:
                     self.window_state = self.menu.click(pg.mouse.get_pos())
+                    
+                    if self.window_state == "update_board":
+                            self.board.init_tiles()
+                            self.window_state = "menu"
 
-                if self.window_state == "board":
+                elif self.window_state == "board":
                     if pg.mouse.get_pos()[1] <= config.WINDOW_WIDTH:
                         if not self.pause_grid:
                             self.window_state, valid_press = self.board.grid_click(pg.mouse.get_pos(), self.current_player)
@@ -51,7 +55,7 @@ class Game:
                     else:
                         self.window_state = self.board.options_click(pg.mouse.get_pos())
                     
-                if self.window_state == "score":
+                elif self.window_state == "score":
                     self.window_state = self.scoreboard.click(pg.mouse.get_pos())
 
             if event.type == pg.QUIT:

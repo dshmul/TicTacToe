@@ -10,13 +10,13 @@ class Board:
     START_BUTTON_SCALE_FACTOR = .125
     NEW_GAME_BUTTON_SCALE_FACTOR = 0.4
 
-    def __init__(self, window, grid_size):
+    def __init__(self, window, menu):
         self.window = window
-        self.grid_size = grid_size
+        self.menu = menu
         self.tiles = []
         self.open_tile_count = 0
         self.freeze_restart = False
-        Tile.tile_size = config.WINDOW_WIDTH // grid_size
+        Tile.tile_size = config.WINDOW_WIDTH // self.menu.grid_size
 
         self.font = pg.font.Font(pg.font.get_default_font(), config.TEXT_SIZE)
         self.popup = pg.Rect((0, 0), (400, 400))
@@ -46,11 +46,12 @@ class Board:
         self.new_game_button_rect.center = (config.WINDOW_WIDTH // 2, 400)
 
     def init_tiles(self):
+        Tile.tile_size = config.WINDOW_WIDTH // self.menu.grid_size
         self.tiles.clear()
-        self.open_tile_count = self.grid_size ** 2
+        self.open_tile_count = self.menu.grid_size ** 2
 
-        for r in range(self.grid_size):
-            for c in range(self.grid_size):
+        for r in range(self.menu.grid_size):
+            for c in range(self.menu.grid_size):
                 self.tiles.append(Tile(r, c))
 
     def draw_board(self):
@@ -75,7 +76,7 @@ class Board:
         if 0 <= mouse_pos[0] < config.WINDOW_WIDTH and 0 <= mouse_pos[1] < config.WINDOW_WIDTH: 
             col = mouse_pos[0] // Tile.tile_size
             row = mouse_pos[1] // Tile.tile_size
-            tile_idx = self.grid_size * row + col
+            tile_idx = self.menu.grid_size * row + col
 
             valid_press = self.tiles[tile_idx].update_marking(player)
             if valid_press:
@@ -95,6 +96,7 @@ class Board:
             return "menu"
         elif self.restart_button_rect.collidepoint(x, y) and not self.freeze_restart: #TODO: is it logical to switch player?
             self.init_tiles()
+            print(self.menu.player1.username)
         elif self.podium_button_rect.collidepoint(x, y):
             return "score"
         return "board"
@@ -103,9 +105,9 @@ class Board:
         return True if self.open_tile_count <= 0 else False
     
     def check_win(self):
-        tiles_reshaped = np.reshape(self.tiles, (self.grid_size, self.grid_size))
+        tiles_reshaped = np.reshape(self.tiles, (self.menu.grid_size, self.menu.grid_size))
 
-        for i in range(self.grid_size):
+        for i in range(self.menu.grid_size):
             # check row
             if all(tile.marking and tile.marking == tiles_reshaped[i, 0].marking for tile in tiles_reshaped[i, :]):
                 return True
