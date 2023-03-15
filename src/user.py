@@ -1,6 +1,5 @@
 from src import config
 import requests
-import json
 
 class User:
     def __init__(self, marker):
@@ -31,7 +30,7 @@ class User:
             self.token = reply.json()["token"]
     
     def logout(self):
-        self.usernaem = ""
+        self.username = ""
         self.token = ""
 
     def validate_token(self):
