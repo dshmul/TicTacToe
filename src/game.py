@@ -39,6 +39,8 @@ class Game:
                     
                     if self.window_state == "update_board":
                             self.board.init_tiles()
+                            self.pause_grid = False
+                            self.game_state = ""
                             self.window_state = "menu"
 
                 elif self.window_state == "board":
