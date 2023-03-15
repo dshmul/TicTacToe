@@ -5,12 +5,6 @@ import pygame as pg
 import requests
 import os
 
-# TODO: add mechanism to check token validity (+ add popup to board)
-# TODO: implement text input
-# TODO: search player score
-# TODO: buttons in their own class
-# TODO: popup delay
-
 class Menu:
     TITLE_SCALE_FACTOR = 0.40
     START_BUTTON_SCALE_FACTOR = 0.125
@@ -51,15 +45,15 @@ class Menu:
         self.start_gray_button_rect.center = (config.WINDOW_WIDTH // 2, 635)
 
         # Surfaces before login
-        self.username1_input = InputBox(config.WINDOW_WIDTH * 0.25, 275, 200, 50, "username") 
-        self.username2_input = InputBox(config.WINDOW_WIDTH * 0.75, 275, 200, 50, "username")
-        self.password1_input = InputBox(config.WINDOW_WIDTH * 0.25, 340, 200, 50, "password")
-        self.password2_input = InputBox(config.WINDOW_WIDTH * 0.75, 340, 200, 50, "password")
+        self.username1_input = InputBox(config.WINDOW_WIDTH * 0.25, 250, 200, 50, "username") 
+        self.username2_input = InputBox(config.WINDOW_WIDTH * 0.75, 250, 200, 50, "username")
+        self.password1_input = InputBox(config.WINDOW_WIDTH * 0.25, 315, 200, 50, "password")
+        self.password2_input = InputBox(config.WINDOW_WIDTH * 0.75, 315, 200, 50, "password")
 
         self.register1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.register1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 405)
+        self.register1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 380)
         self.register2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.register2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 405)
+        self.register2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 380)
 
         self.register1_text = config.HEADER_FONT.render("Register", True, config.BLACK)
         self.register1_text_rect = self.register1_text.get_rect()
@@ -69,9 +63,9 @@ class Menu:
         self.register2_text_rect.center = self.register2_button_rect.center
                 
         self.guest1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.guest1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 470)
+        self.guest1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 445)
         self.guest2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.guest2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 470)
+        self.guest2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 445)
 
         self.guest1_text = config.HEADER_FONT.render("Guest", True, config.BLACK)
         self.guest1_text_rect = self.guest1_text.get_rect()
@@ -82,21 +76,21 @@ class Menu:
 
         # Surfaces after login
         self.cover1_rect = pg.Rect((0, 0), (275, 275))
-        self.cover1_rect.center = (config.WINDOW_WIDTH * 0.25, 370)
+        self.cover1_rect.center = (config.WINDOW_WIDTH * 0.25, 345)
         self.cover2_rect = pg.Rect((0, 0), (275, 275))
-        self.cover2_rect.center = (config.WINDOW_WIDTH * 0.75, 370)
+        self.cover2_rect.center = (config.WINDOW_WIDTH * 0.75, 345)
 
         self.username1_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)  #TODO: make sure I never see this
         self.username1_text_rect = self.username1_text.get_rect()
-        self.username1_text_rect.center = (config.WINDOW_WIDTH * 0.25, 340)
+        self.username1_text_rect.center = (config.WINDOW_WIDTH * 0.25, 315)
         self.username2_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)  #TODO: make sure I never see this
         self.username2_text_rect = self.username2_text.get_rect()
-        self.username2_text_rect.center = (config.WINDOW_WIDTH * 0.75, 340)
+        self.username2_text_rect.center = (config.WINDOW_WIDTH * 0.75, 315)
 
         self.logout1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.logout1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 405)
+        self.logout1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 380)
         self.logout2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.logout2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 405)
+        self.logout2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 380)
 
         self.logout1_text = config.HEADER_FONT.render("Logout", True, config.BLACK)
         self.logout1_text_rect = self.logout1_text.get_rect()
@@ -107,9 +101,9 @@ class Menu:
 
         # Surfaces for grid size selection
         self.grid_3_button_rect = pg.Rect((0, 0), (75, 50))
-        self.grid_3_button_rect.center = (config.WINDOW_WIDTH * 0.4, 550)
+        self.grid_3_button_rect.center = (config.WINDOW_WIDTH * 0.4, 540)
         self.grid_10_button_rect = pg.Rect((0, 0), (75, 50))
-        self.grid_10_button_rect.center = (config.WINDOW_WIDTH * 0.6, 550)
+        self.grid_10_button_rect.center = (config.WINDOW_WIDTH * 0.6, 540)
 
         self.grid_3_text = config.HEADER_FONT.render("3x3", True, config.BLACK)
         self.grid_3_text_rect = self.grid_3_text.get_rect()
@@ -132,7 +126,7 @@ class Menu:
         else:
             self.window.blit(self.start_gray_button, self.start_gray_button_rect)
 
-        pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 2, 235), (config.WINDOW_WIDTH // 2, 510), width=4)
+        pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 2, 210), (config.WINDOW_WIDTH // 2, 485), width=4)
 
         if not self.player1.logged_in:
             self.username1_input.draw(self.window)

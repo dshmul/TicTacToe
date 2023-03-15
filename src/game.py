@@ -4,7 +4,13 @@ from src.board import Board
 from src.scoreboard import Scoreboard
 import pygame as pg
 import sys
-from threading import Thread
+import requests
+
+# TODO: implement text input
+# TODO: add mechanism to check token validity (+ add popup to board)
+# TODO: search player score
+# TODO: buttons in their own class
+# TODO: popup delay
 
 class Game:
     def __init__(self):
@@ -93,9 +99,12 @@ class Game:
 
     def update_game_state(self):
         if self.board.check_win():
+            reply = requests.post(config.API_ADDR + "score",\
+                                 json={"score": 1 + self.board.open_tile_count, "grid_size": self.menu.grid_size},\
+                                    headers={"x-access-token": self.current_player.token}).json()
             self.pause_grid = True
             self.game_state = "win"
-            print(f"Player {self.current_player.marker!r} WON - SCORE: {1 + self.board.open_tile_count}")
+            print(f"{reply['message']} | Player {self.current_player.marker!r} WON - SCORE: {1 + self.board.open_tile_count}")
         elif self.board.check_draw():
             self.pause_grid = True
             self.game_state = "draw"
