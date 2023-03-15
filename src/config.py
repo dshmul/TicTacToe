@@ -11,6 +11,7 @@ FPS = 60
 # Preset colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+LIGHT_GRAY = (128, 128, 128)
 GRAY = (200, 200, 200)
 GRAY_T = (200, 200, 200, 128)
 DARK_GRAY = (95, 95, 95)

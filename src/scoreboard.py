@@ -43,8 +43,8 @@ class Scoreboard:
         self.draw_text("Score", config.HEADER_FONT, config.DARK_GRAY, (config.WINDOW_WIDTH // 2, 175))
         self.draw_text("Timestamp", config.HEADER_FONT, config.DARK_GRAY, (config.WINDOW_WIDTH // 21 * 17.5, 175))
 
-        request = requests.get(config.API_ADDR + "/scoreboard/" + str(grid_size)).json()
-        entries = request["scoreboard"]
+        reply = requests.get(config.API_ADDR + "/scoreboard/" + str(grid_size)).json()
+        entries = reply["scoreboard"]
         y = 225
         for i, entry in enumerate(entries):
             self.draw_text(i + 1, config.TEXT_FONT, config.BLACK, (15, y))

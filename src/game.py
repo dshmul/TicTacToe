@@ -20,6 +20,7 @@ class Game:
         self.running = True
         self.pause_grid = False
         self.game_state = ""
+        self.active_input = None
 
     def run(self):
         '''Game runnning loop'''
@@ -39,8 +40,9 @@ class Game:
                 if self.window_state == "board":
                     if pg.mouse.get_pos()[1] <= config.WINDOW_WIDTH:
                         if not self.pause_grid:
-                            self.window_state = self.board.grid_click(pg.mouse.get_pos(), self.current_player)
-                            self.update_game_state()
+                            self.window_state, valid_press = self.board.grid_click(pg.mouse.get_pos(), self.current_player)
+                            if valid_press:
+                                self.update_game_state()
                         elif self.board.popup_click(pg.mouse.get_pos()):
                             self.board.init_tiles()
                             self.pause_grid = False
@@ -67,8 +69,13 @@ class Game:
 
             if self.game_state == "win":
                 self.board.draw_popup(f"{self.current_player!r} WON")
+                self.board.freeze_restart = True
             elif self.game_state == "draw":
                 self.board.draw_popup("DRAW!")
+                self.board.freeze_restart = True
+
+            else:
+                self.board.freeze_restart = False
 
         elif self.window_state == "score":
             self.scoreboard.draw_scoreboard(self.menu.grid_size)
