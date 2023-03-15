@@ -41,13 +41,13 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message': 'Token is missing.'}, 401)
+            return jsonify({'message': 'Token is missing.'}), 401
         
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
-            return jsonify({'message': 'Token is invalid.'}, 401)
+            return jsonify({'message': 'Token is invalid.'}), 401
         
         return f(current_user, *args, **kwargs)
 
@@ -56,6 +56,11 @@ def token_required(f):
 @app.route('/', methods=['GET'])
 def connected():
     return jsonify({'message': 'API accessible.'})
+
+@app.route('/validate_token', methods=['GET'])
+@token_required
+def validate_token(current_user):
+    return jsonify({'message': 'Token is valid.'})
     
 @app.route('/user', methods=['GET'])
 def get_all_users():
@@ -89,6 +94,11 @@ def get_one_user(public_id):
 def create_user():
     data = request.get_json() # expects {"name": <name>, "password": <password>}
 
+    user = User.query.filter_by(name=data['name']).first()
+
+    if user:
+        return jsonify({'message': 'User already exists.'}), 409
+
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
     new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password)
@@ -98,8 +108,7 @@ def create_user():
     return jsonify({'message': 'New user created!'})
 
 @app.route('/user/<public_id>', methods=['DELETE'])
-@token_required
-def delete_user(current_user, public_id):
+def delete_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
