@@ -1,5 +1,6 @@
 from src import config
 from src.tile import Tile
+from src.playerIndicator import PlayerIndicator
 import pygame as pg
 import numpy as np
 import os
@@ -9,6 +10,7 @@ class Board:
     RESTART_BUTTON_SCALE_FACTOR = .25
     START_BUTTON_SCALE_FACTOR = .125
     NEW_GAME_BUTTON_SCALE_FACTOR = 0.4
+    WINNING_MARKER_SIZE = 100
 
     def __init__(self, window, menu):
         self.window = window
@@ -18,8 +20,7 @@ class Board:
         self.freeze_restart = False
         Tile.tile_size = config.WINDOW_WIDTH // self.menu.grid_size
 
-        self.font = pg.font.Font(pg.font.get_default_font(), config.TEXT_SIZE)
-        self.popup = pg.Rect((0, 0), (400, 400))
+        self.popup = pg.Rect((0, 0), (383, 383))
         self.popup.center = (config.WINDOW_WIDTH // 2, config.WINDOW_WIDTH // 2)
 
         self.menu_img = pg.image.load(os.path.join('Assets', 'menu.png'))
@@ -39,11 +40,13 @@ class Board:
         self.podium_button_rect = self.podium_button.get_rect()
         self.podium_button_rect.center = (550, 650)
 
-        self.new_game_img = pg.image.load(os.path.join('Assets', 'new_game.png'))
-        self.new_game_button = pg.transform.scale(self.new_game_img, (self.new_game_img.get_width() * Board.NEW_GAME_BUTTON_SCALE_FACTOR,\
-                                                                self.new_game_img.get_height() * Board.NEW_GAME_BUTTON_SCALE_FACTOR))
-        self.new_game_button_rect = self.new_game_button.get_rect()
-        self.new_game_button_rect.center = (config.WINDOW_WIDTH // 2, 400)
+        # Surface for popup
+        self.new_game_button_rect = pg.Rect((0, 0), (200, 50))
+        self.new_game_button_rect.center = (config.WINDOW_WIDTH // 2, 415)
+
+        self.new_game_text = config.HEADER_FONT.render("Start New Game", True, config.BLACK)
+        self.new_game_text_rect = self.new_game_text.get_rect()
+        self.new_game_text_rect.center = self.new_game_button_rect.center
 
     def init_tiles(self):
         Tile.tile_size = config.WINDOW_WIDTH // self.menu.grid_size
@@ -54,7 +57,7 @@ class Board:
             for c in range(self.menu.grid_size):
                 self.tiles.append(Tile(r, c))
 
-    def draw_board(self):
+    def draw_board(self, current_player):
         for tile in self.tiles:
             tile.draw(self.window)
 
@@ -62,23 +65,74 @@ class Board:
         self.window.blit(self.restart_button, self.restart_button_rect)
         self.window.blit(self.podium_button, self.podium_button_rect)
 
-    def draw_popup(self, text): #TODO: Add popup for token timeout
-        text = self.font.render(text, True, config.BLACK)
-        text_rect = text.get_rect()
-        text_rect.center = self.popup.center
-        pg.draw.rect(self.window, config.GRAY, self.popup, 200, 50, 50, 50, 50)
-        self.window.blit(text, text_rect)
+        # Surface for current player
+        self.player1_indicator = PlayerIndicator(self.menu.player1, False, config.WINDOW_WIDTH // 2 - 70, 650)
+        self.player2_indicator = PlayerIndicator(self.menu.player2, False, config.WINDOW_WIDTH // 2 + 110, 650)
+        self.player1_active_indicator = PlayerIndicator(self.menu.player1, True, config.WINDOW_WIDTH // 2 - 70, 650)
+        self.player2_active_indicator = PlayerIndicator(self.menu.player2, True, config.WINDOW_WIDTH // 2 + 110, 650)
 
-        self.window.blit(self.new_game_button, self.new_game_button_rect)
+        if current_player.marker == "X":
+            self.player1_active_indicator.draw(self.window)
+            self.player2_indicator.draw(self.window)
+        elif current_player.marker == "O":
+            self.player1_indicator.draw(self.window)
+            self.player2_active_indicator.draw(self.window)
+
+    def draw_popup(self, game_state, current_player): 
+        pg.draw.rect(self.window, config.GRAY, self.popup, 200, 50, 50, 50, 50)
+
+        if game_state == "win":
+            winner_msg = config.TITLE_FONT.render(f"{current_player.username} WON!", True, config.BLACK)
+            winner_msg_rect = winner_msg.get_rect()
+            winner_msg_rect.center = (config.WINDOW_WIDTH // 2, 175)
+            self.window.blit(winner_msg, winner_msg_rect)
+
+            score_msg = config.HEADER_FONT.render(f"Score: {1 + self.open_tile_count}", True, config.BLACK) 
+            score_msg_rect = score_msg.get_rect()
+            score_msg_rect.center = (config.WINDOW_WIDTH // 2, 210)
+            self.window.blit(score_msg, score_msg_rect)
+
+            if current_player.marker == 'X':
+                marker_img = pg.image.load(os.path.join('Assets', 'x.png'))
+            elif current_player.marker == 'O':
+                marker_img = pg.image.load(os.path.join('Assets', 'o.png'))
+
+            marker = pg.transform.scale(marker_img, (Board.WINNING_MARKER_SIZE,\
+                                                    Board.WINNING_MARKER_SIZE))
+            marker_rect = marker.get_rect()
+            marker_rect.center = (config.WINDOW_WIDTH // 2, config.WINDOW_WIDTH // 2)
+            self.window.blit(marker, marker_rect)
+        else:
+            draw_msg = config.EXTRA_BIG_FONT.render(f"DRAW :\\", True, config.BLACK)
+            draw_msg_rect = draw_msg.get_rect()
+            draw_msg_rect.center = (config.WINDOW_WIDTH // 2, 200)
+            self.window.blit(draw_msg, draw_msg_rect)
+
+            x_marker_img = pg.image.load(os.path.join('Assets', 'x.png'))
+            x_marker = pg.transform.scale(x_marker_img, (Board.WINNING_MARKER_SIZE,\
+                                                    Board.WINNING_MARKER_SIZE))
+            x_marker_rect = x_marker.get_rect()
+            x_marker_rect.center = (config.WINDOW_WIDTH // 2 - 70, config.WINDOW_WIDTH // 2)
+            self.window.blit(x_marker, x_marker_rect)
+
+            o_marker_img = pg.image.load(os.path.join('Assets', 'o.png'))
+            o_marker = pg.transform.scale(o_marker_img, (Board.WINNING_MARKER_SIZE,\
+                                                    Board.WINNING_MARKER_SIZE))
+            o_marker_rect = o_marker.get_rect()
+            o_marker_rect.center = (config.WINDOW_WIDTH // 2 + 70, config.WINDOW_WIDTH // 2)
+            self.window.blit(o_marker, o_marker_rect)
+
+        pg.draw.rect(self.window, config.YELLOW, self.new_game_button_rect, 25, 5, 5, 5, 5)
+        self.window.blit(self.new_game_text, self.new_game_text_rect)
         
-    def grid_click(self, mouse_pos, player):
+    def grid_click(self, mouse_pos, current_player):
         # check if click is on tiles
         if 0 <= mouse_pos[0] < config.WINDOW_WIDTH and 0 <= mouse_pos[1] < config.WINDOW_WIDTH: 
             col = mouse_pos[0] // Tile.tile_size
             row = mouse_pos[1] // Tile.tile_size
             tile_idx = self.menu.grid_size * row + col
 
-            valid_press = self.tiles[tile_idx].update_marking(player)
+            valid_press = self.tiles[tile_idx].update_marking(current_player.marker)
             if valid_press:
                 self.open_tile_count -= 1
                 
@@ -96,7 +150,9 @@ class Board:
             return "menu"
         elif self.restart_button_rect.collidepoint(x, y) and not self.freeze_restart: #TODO: is it logical to switch player?
             self.init_tiles()
-            print(self.menu.player1.username)
+        elif (self.player1_indicator.bounding_rect.collidepoint(x, y) or self.player2_indicator.bounding_rect.collidepoint(x, y))\
+                and self.open_tile_count == self.menu.grid_size ** 2:
+            return "switch_player"
         elif self.podium_button_rect.collidepoint(x, y):
             return "score"
         return "board"

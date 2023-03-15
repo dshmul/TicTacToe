@@ -11,5 +11,5 @@ class InputBox():
         self.initial_text_rect.center = self.entry_rect.center
 
     def draw(self, window):
-        pg.draw.rect(window, config.GRAY, self.entry_rect, 3, 5, 5, 5, 5)
+        pg.draw.rect(window, config.LIGHT_ORANGE, self.entry_rect, 3, 5, 5, 5, 5)
         window.blit(self.initial_text, self.initial_text_rect)

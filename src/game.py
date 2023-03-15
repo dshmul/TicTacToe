@@ -13,7 +13,7 @@ class Game:
         pg.display.set_caption(config.TITLE)
         self.window_state = "menu" 
         self.menu = Menu(self.window)
-        self.current_player = self.menu.starting_player
+        self.current_player = self.menu.player1
         self.board = Board(self.window, self.menu)
         self.scoreboard = Scoreboard(self.window)
         self.board.init_tiles()
@@ -54,6 +54,9 @@ class Game:
 
                     else:
                         self.window_state = self.board.options_click(pg.mouse.get_pos())
+                        if self.window_state == "switch_player":
+                            self.current_player = self.menu.player2 if self.current_player.marker == "X" else self.menu.player1
+                            self.window_state = "board"
                     
                 elif self.window_state == "score":
                     self.window_state = self.scoreboard.click(pg.mouse.get_pos())
@@ -69,13 +72,13 @@ class Game:
             self.menu.draw_menu()
 
         elif self.window_state == "board":
-            self.board.draw_board()
+            self.board.draw_board(self.current_player)
 
             if self.game_state == "win":
-                self.board.draw_popup(f"{self.current_player!r} WON")
+                self.board.draw_popup(self.game_state, self.current_player)
                 self.board.freeze_restart = True
             elif self.game_state == "draw":
-                self.board.draw_popup("DRAW!")
+                self.board.draw_popup(self.game_state, self.current_player)
                 self.board.freeze_restart = True
 
             else:
@@ -90,13 +93,13 @@ class Game:
         if self.board.check_win():
             self.pause_grid = True
             self.game_state = "win"
-            print(f"Player {self.current_player!r} WON - SCORE: {1 + self.board.open_tile_count}")
+            print(f"Player {self.current_player.marker!r} WON - SCORE: {1 + self.board.open_tile_count}")
         elif self.board.check_draw():
             self.pause_grid = True
             self.game_state = "draw"
             print("DRAW")
         else:
-            self.current_player = "O" if self.current_player == "X" else "X"
+            self.current_player = self.menu.player2 if self.current_player.marker == "X" else self.menu.player1
 
     def quit(self):
         '''Terminate the program'''

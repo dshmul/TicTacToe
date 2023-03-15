@@ -5,7 +5,11 @@ import pygame as pg
 import requests
 import os
 
-# TODO: add mechanism to check token validity
+# TODO: add mechanism to check token validity (+ add popup to board)
+# TODO: implement text input
+# TODO: search player score
+# TODO: buttons in their own class
+# TODO: popup delay
 
 class Menu:
     TITLE_SCALE_FACTOR = 0.40
@@ -47,7 +51,7 @@ class Menu:
         self.start_gray_button_rect.center = (config.WINDOW_WIDTH // 2, 635)
 
         # Surfaces before login
-        self.username1_input = InputBox(config.WINDOW_WIDTH * 0.25, 275, 200, 50, "username") # TODO: implement text input
+        self.username1_input = InputBox(config.WINDOW_WIDTH * 0.25, 275, 200, 50, "username") 
         self.username2_input = InputBox(config.WINDOW_WIDTH * 0.75, 275, 200, 50, "username")
         self.password1_input = InputBox(config.WINDOW_WIDTH * 0.25, 340, 200, 50, "password")
         self.password2_input = InputBox(config.WINDOW_WIDTH * 0.75, 340, 200, 50, "password")
@@ -133,29 +137,29 @@ class Menu:
         if not self.player1.logged_in:
             self.username1_input.draw(self.window)
             self.password1_input.draw(self.window)
-            pg.draw.rect(self.window, config.GRAY, self.register1_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.register1_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.register1_text, self.register1_text_rect)
-            pg.draw.rect(self.window, config.GRAY, self.guest1_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.guest1_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.guest1_text, self.guest1_text_rect)
         else:
             pg.draw.rect(self.window, config.WHITE, self.cover1_rect)
 
             self.window.blit(self.username1_text, self.username1_text_rect)
-            pg.draw.rect(self.window, config.GRAY, self.logout1_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.logout1_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.logout1_text, self.logout1_text_rect)
 
         if not self.player2.logged_in:
             self.username2_input.draw(self.window)
             self.password2_input.draw(self.window)
-            pg.draw.rect(self.window, config.GRAY, self.register2_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.register2_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.register2_text, self.register2_text_rect)
-            pg.draw.rect(self.window, config.GRAY, self.guest2_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.guest2_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.guest2_text, self.guest2_text_rect)
         else:
             pg.draw.rect(self.window, config.WHITE, self.cover2_rect)
 
             self.window.blit(self.username2_text, self.username2_text_rect)
-            pg.draw.rect(self.window, config.GRAY, self.logout2_button_rect, 25, 5, 5, 5, 5)
+            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.logout2_button_rect, 25, 5, 5, 5, 5)
             self.window.blit(self.logout2_text, self.logout2_text_rect)
 
         if self.grid_size == 3:
@@ -196,7 +200,6 @@ class Menu:
         else:
             self.start_game = False
 
-        # TODO: refresh board
         if self.grid_size == 10 and self.grid_3_button_rect.collidepoint(x, y):
             self.grid_size = 3
             return "update_board"
