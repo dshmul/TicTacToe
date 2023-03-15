@@ -183,7 +183,7 @@ def get_user_score(current_user, grid_size):
 def get_grid_scoreboard(grid_size):
     entries = db.session.query(Score.user_id, Score.date, Score.score, Score.grid_size, User.public_id, User.name)\
         .select_from(Score).filter_by(grid_size=grid_size).join(User, Score.user_id==User.public_id)\
-            .order_by(Score.score.desc()).limit(10).all()
+            .order_by(Score.score.desc(), Score.date.desc()).limit(10).all()
 
     if not entries:
         return jsonify({'message': 'No entries found.'})
