@@ -118,11 +118,14 @@ class Menu:
             requests.get(config.API_ADDR + "/")
             self.window.blit(self.title, self.title_rect)
             self.api_connection = True
+
+            self.player1.validate_token()
+            self.player2.validate_token()
         except:
             self.window.blit(self.title_gray, self.title_gray_rect)
             self.api_connection = False
 
-        if self.start_game and self.api_connection:
+        if self.start_game and self.api_connection and self.player1.logged_in and self.player2.logged_in:
             self.window.blit(self.start_button, self.start_button_rect)
         else:
             self.window.blit(self.start_gray_button, self.start_gray_button_rect)

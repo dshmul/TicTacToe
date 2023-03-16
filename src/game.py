@@ -9,7 +9,6 @@ import requests
 # TODO: search player score
 # TODO: buttons in their own class
 # TODO: popup delay
-# TODO: improve token check logic
 
 class Game:
     MAX_INPUT_LENGTH = 10
@@ -51,14 +50,12 @@ class Game:
                             self.window_state = "menu"
 
                     if self.game_state == "expired" and self.menu.player1.logged_in and self.menu.player2.logged_in:
-                            self.game_state = ""
+                            self.board.init_tiles()
                             self.pause_grid = False
+                            self.game_state = ""
 
                 elif self.window_state == "board":
                     if pg.mouse.get_pos()[1] <= config.WINDOW_WIDTH:
-                        if not self.current_player.validate_token():
-                            self.game_state = "expired"
-
                         if not self.pause_grid and self.game_state != "expired":
                             self.window_state, valid_press = self.board.grid_click(pg.mouse.get_pos(), self.current_player)
                             if valid_press:
@@ -100,14 +97,11 @@ class Game:
 
         elif self.window_state == "board":
             self.board.draw_board(self.current_player)
+            
+            if not self.menu.player1.validate_token() or not self.menu.player2.validate_token():
+                self.game_state = "expired"
 
-            if self.game_state == "win":
-                self.board.draw_popup(self.game_state, self.current_player)
-                self.board.freeze_restart = True
-            elif self.game_state == "draw":
-                self.board.draw_popup(self.game_state, self.current_player)
-                self.board.freeze_restart = True
-            elif self.game_state == "expired":
+            if self.game_state:
                 self.board.draw_popup(self.game_state, self.current_player)
                 self.board.freeze_restart = True
             else:
