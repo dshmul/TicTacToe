@@ -8,7 +8,7 @@ class User:
         self.token = ""
         self.logged_in = False
 
-    def register(self, username, password): #TODO: add log handler
+    def register(self, username, password): 
         self.username = username
 
         reply = requests.get(config.API_ADDR + "login", auth=(username, password))

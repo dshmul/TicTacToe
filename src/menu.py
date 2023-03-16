@@ -81,10 +81,10 @@ class Menu:
         self.cover2_rect = pg.Rect((0, 0), (275, 275))
         self.cover2_rect.center = (config.WINDOW_WIDTH * 0.75, 345)
 
-        self.username1_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)  #TODO: make sure I never see this
+        self.username1_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)
         self.username1_text_rect = self.username1_text.get_rect()
         self.username1_text_rect.center = (config.WINDOW_WIDTH * 0.25, 315)
-        self.username2_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)  #TODO: make sure I never see this
+        self.username2_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK) 
         self.username2_text_rect = self.username2_text.get_rect()
         self.username2_text_rect.center = (config.WINDOW_WIDTH * 0.75, 315)
 

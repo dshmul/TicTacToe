@@ -148,7 +148,7 @@ class Board:
         x, y = mouse_pos
         if self.menu_button_rect.collidepoint(x, y):
             return "menu"
-        elif self.restart_button_rect.collidepoint(x, y) and not self.freeze_restart: #TODO: is it logical to switch player?
+        elif self.restart_button_rect.collidepoint(x, y) and not self.freeze_restart: 
             self.init_tiles()
         elif (self.player1_indicator.bounding_rect.collidepoint(x, y) or self.player2_indicator.bounding_rect.collidepoint(x, y))\
                 and self.open_tile_count == self.menu.grid_size ** 2:
