@@ -6,10 +6,6 @@ import pygame as pg
 import sys
 import requests
 
-# TODO: buttons in their own class
-# TODO: popup delay
-#   - thinking I can take advantage of render rate and use a counter
-
 class Game:
     MAX_INPUT_LENGTH = 10
 
@@ -27,6 +23,8 @@ class Game:
         self.pause_grid = False
         self.game_state = ""
         self.active_input = None
+        self.counter = False
+        self.delay_count = 0
 
     def run(self):
         '''Game runnning loop'''
@@ -104,10 +102,16 @@ class Game:
                 self.game_state = "expired"
 
             if self.game_state:
-                self.board.draw_popup(self.game_state, self.current_player)
+                if self.delay_count == 20:
+                    self.board.draw_popup(self.game_state, self.current_player)
+                    self.counter = False
+
                 self.board.freeze_restart = True
             else:
                 self.board.freeze_restart = False
+
+            if self.counter:
+                self.delay_count += 1
 
         elif self.window_state == "score":
             self.scoreboard.draw_scoreboard(self.menu.grid_size)
@@ -122,12 +126,15 @@ class Game:
             self.pause_grid = True
             self.game_state = "win"
             print(f"{reply['message']} | Player {self.current_player.marker!r} WON - SCORE: {1 + self.board.open_tile_count}")
+            self.counter = True
         elif self.board.check_draw():
             self.pause_grid = True
             self.game_state = "draw"
             print("DRAW")
+            self.counter = True
         else:
             self.current_player = self.menu.player2 if self.current_player.marker == "X" else self.menu.player1
+            self.delay_count = 0
 
     def quit(self):
         '''Terminate the program'''
