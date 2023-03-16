@@ -18,7 +18,7 @@ class User:
         else:
             self.logged_in = self.register_new_user(username, password)    
 
-    def register_new_user(self, username, password): #TODO: add validation for input
+    def register_new_user(self, username, password): 
         reply = requests.post(config.API_ADDR + "user", json={"name": username, "password": password}).json()
         print(reply["message"])
 
