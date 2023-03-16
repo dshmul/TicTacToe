@@ -6,10 +6,10 @@ import pygame as pg
 import sys
 import requests
 
-# TODO: add mechanism to check token validity (+ add popup to board)
 # TODO: search player score
 # TODO: buttons in their own class
 # TODO: popup delay
+# TODO: improve token check logic
 
 class Game:
     MAX_INPUT_LENGTH = 10
@@ -50,16 +50,27 @@ class Game:
                             self.game_state = ""
                             self.window_state = "menu"
 
+                    if self.game_state == "expired" and self.menu.player1.logged_in and self.menu.player2.logged_in:
+                            self.game_state = ""
+                            self.pause_grid = False
+
                 elif self.window_state == "board":
                     if pg.mouse.get_pos()[1] <= config.WINDOW_WIDTH:
-                        if not self.pause_grid:
+                        if not self.current_player.validate_token():
+                            self.game_state = "expired"
+
+                        if not self.pause_grid and self.game_state != "expired":
                             self.window_state, valid_press = self.board.grid_click(pg.mouse.get_pos(), self.current_player)
                             if valid_press:
                                 self.update_game_state()
-                        elif self.board.popup_click(pg.mouse.get_pos()):
-                            self.board.init_tiles()
-                            self.pause_grid = False
-                            self.game_state = ""
+
+                        if self.game_state:
+                            self.window_state, reset_board = self.board.popup_click(pg.mouse.get_pos(), self.game_state)
+
+                            if reset_board:
+                                self.board.init_tiles()
+                                self.pause_grid = False
+                                self.game_state = ""
 
                     else:
                         self.window_state = self.board.options_click(pg.mouse.get_pos())
@@ -73,7 +84,8 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_BACKSPACE:
                     self.menu.active_input.input = self.menu.active_input.input[:-1]
-                elif len(self.menu.active_input.input) <= Game.MAX_INPUT_LENGTH and event.key != pg.K_TAB and event.key != pg.K_BACKSLASH:
+                elif self.menu.active_input and len(self.menu.active_input.input) <= Game.MAX_INPUT_LENGTH \
+                        and event.key != pg.K_TAB and event.key != pg.K_BACKSLASH:
                     self.menu.active_input.input += event.unicode
 
             if event.type == pg.QUIT:
@@ -95,7 +107,9 @@ class Game:
             elif self.game_state == "draw":
                 self.board.draw_popup(self.game_state, self.current_player)
                 self.board.freeze_restart = True
-
+            elif self.game_state == "expired":
+                self.board.draw_popup(self.game_state, self.current_player)
+                self.board.freeze_restart = True
             else:
                 self.board.freeze_restart = False
 

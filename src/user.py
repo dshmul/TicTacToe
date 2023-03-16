@@ -36,6 +36,7 @@ class User:
     def validate_token(self):
         reply = requests.get(config.API_ADDR + "validate_token", headers={"x-access-token": self.token}).json()
         if reply["message"] == "Token is valid.":
-            self.logged_in = True
-        else:
-            self.logged_in = False
+            return True
+        
+        self.logged_in = False
+        return False
