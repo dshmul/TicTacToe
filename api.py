@@ -21,7 +21,7 @@ class User(db.Model):
     name = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
 
-class Score(db.Model): #TODO: change to "Score"
+class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(100))
     date = db.Column(db.String())
