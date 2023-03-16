@@ -214,4 +214,4 @@ def delete_user_entries(user_id):
     return jsonify({'message': 'User entries deleted.'})
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    app.run(debug=True)
