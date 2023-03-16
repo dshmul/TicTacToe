@@ -14,20 +14,19 @@ class User:
         reply = requests.get(config.API_ADDR + "login", auth=(username, password))
         if reply.status_code == 200:
             self.token = reply.json()["token"]
+            self.logged_in = True
         else:
-            self.register_new_user(username, password)
-        
-        self.logged_in = True
+            self.logged_in = self.register_new_user(username, password)    
 
     def register_new_user(self, username, password): #TODO: add validation for input
         reply = requests.post(config.API_ADDR + "user", json={"name": username, "password": password}).json()
         print(reply["message"])
-        if reply["message"] != "New user created!":
-            Exception("Error in user creation.")
 
         reply = requests.get(config.API_ADDR + "login", auth=(username, password))
         if reply.status_code == 200:
             self.token = reply.json()["token"]
+            return True
+        return False
     
     def logout(self):
         self.username = ""

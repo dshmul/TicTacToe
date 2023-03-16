@@ -6,13 +6,14 @@ import pygame as pg
 import sys
 import requests
 
-# TODO: implement text input
 # TODO: add mechanism to check token validity (+ add popup to board)
 # TODO: search player score
 # TODO: buttons in their own class
 # TODO: popup delay
 
 class Game:
+    MAX_INPUT_LENGTH = 10
+
     def __init__(self):
         pg.init()
         self.window = pg.display.set_mode((config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
@@ -68,6 +69,12 @@ class Game:
                     
                 elif self.window_state == "score":
                     self.window_state = self.scoreboard.click(pg.mouse.get_pos())
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_BACKSPACE:
+                    self.menu.active_input.input = self.menu.active_input.input[:-1]
+                elif len(self.menu.active_input.input) <= Game.MAX_INPUT_LENGTH and event.key != pg.K_TAB and event.key != pg.K_BACKSLASH:
+                    self.menu.active_input.input += event.unicode
 
             if event.type == pg.QUIT:
                 self.quit()

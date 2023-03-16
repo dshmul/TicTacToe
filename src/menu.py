@@ -15,6 +15,7 @@ class Menu:
         self.starting_player = 'X'
         self.api_connection = False
         self.start_game = False
+        self.active_input = None
 
         self.player1 = User('X')
         self.player2 = User('O')
@@ -168,10 +169,48 @@ class Menu:
         
     def click(self, mouse_pos): 
         x, y = mouse_pos
+
+        if self.username1_input.entry_rect.collidepoint(x, y):
+            self.active_input = self.username1_input
+            self.username1_input.active = True
+            self.username2_input.active = False
+            self.password1_input.active = False
+            self.password2_input.active = False
+        elif self.username2_input.entry_rect.collidepoint(x, y):
+            self.active_input = self.username2_input
+            self.username1_input.active = False
+            self.username2_input.active = True
+            self.password1_input.active = False
+            self.password2_input.active = False
+        elif self.password1_input.entry_rect.collidepoint(x, y):
+            self.active_input = self.password1_input
+            self.username1_input.active = False
+            self.username2_input.active = False
+            self.password1_input.active = True
+            self.password2_input.active = False
+        elif self.password2_input.entry_rect.collidepoint(x, y):
+            self.active_input = self.password2_input
+            self.username1_input.active = False
+            self.username2_input.active = False
+            self.password1_input.active = False
+            self.password2_input.active = True
+        else:
+            self.active_input = None
+            self.username1_input.active = False
+            self.username2_input.active = False
+            self.password1_input.active = False
+            self.password2_input.active = False
         
         if not self.player1.logged_in:
-            if self.register1_button_rect.collidepoint(x, y):
-                pass
+            if self.register1_button_rect.collidepoint(x, y) and self.username1_input.input and self.password1_input.input:
+                self.player1.register(self.username1_input.input, self.password1_input.input)
+
+                if not self.player1.token:
+                    self.username1_input.invalid = True
+                    self.password1_input.invalid = True
+                else:
+                    self.username1_input.invalid = False
+                    self.password1_input.invalid = False
             elif self.guest1_button_rect.collidepoint(x, y):
                 self.player1.register("Guest", "guest")
             self.username1_text = config.HEADER_FONT.render(self.player1.username, True, config.BLACK)    
@@ -180,8 +219,15 @@ class Menu:
                 self.player1.logout()
 
         if not self.player2.logged_in:
-            if self.register2_button_rect.collidepoint(x, y):
-                pass
+            if self.register2_button_rect.collidepoint(x, y) and self.username2_input.input and self.password2_input.input:
+                self.player2.register(self.username2_input.input, self.password2_input.input)
+                
+                if not self.player2.token:
+                    self.username2_input.invalid = True
+                    self.password2_input.invalid = True
+                else:
+                    self.username2_input.invalid = False
+                    self.password2_input.invalid = False
             elif self.guest2_button_rect.collidepoint(x, y):
                 self.player2.register("Guest", "guest")
             self.username2_text = config.HEADER_FONT.render(self.player2.username, True, config.BLACK)  

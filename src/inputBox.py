@@ -10,6 +10,26 @@ class InputBox():
         self.initial_text_rect = self.initial_text.get_rect()
         self.initial_text_rect.center = self.entry_rect.center
 
+        self.active = False
+        self.invalid = False
+        self.input = ""
+
     def draw(self, window):
-        pg.draw.rect(window, config.LIGHT_ORANGE, self.entry_rect, 3, 5, 5, 5, 5)
-        window.blit(self.initial_text, self.initial_text_rect)
+        if self.active:
+            if self.invalid:
+                pg.draw.rect(window, config.DARK_RED, self.entry_rect, 3, 5, 5, 5, 5)
+            else:
+                pg.draw.rect(window, config.ORANGE, self.entry_rect, 3, 5, 5, 5, 5)
+        elif self.invalid:
+            pg.draw.rect(window, config.RED, self.entry_rect, 3, 5, 5, 5, 5)
+        else:
+            pg.draw.rect(window, config.LIGHT_ORANGE, self.entry_rect, 3, 5, 5, 5, 5)
+
+        if self.input == "":
+            window.blit(self.initial_text, self.initial_text_rect)
+        else:
+            text = config.TEXT_FONT.render(self.input, True, config.BLACK)
+            text_rect = text.get_rect()
+            text_rect.center = self.entry_rect.center
+            window.blit(text, text_rect)
+
