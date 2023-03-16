@@ -6,9 +6,9 @@ import pygame as pg
 import sys
 import requests
 
-# TODO: search player score
 # TODO: buttons in their own class
 # TODO: popup delay
+#   - thinking I can take advantage of render rate and use a counter
 
 class Game:
     MAX_INPUT_LENGTH = 10
@@ -21,7 +21,7 @@ class Game:
         self.menu = Menu(self.window)
         self.current_player = self.menu.player1
         self.board = Board(self.window, self.menu)
-        self.scoreboard = Scoreboard(self.window)
+        self.scoreboard = Scoreboard(self.window, self.menu)
         self.board.init_tiles()
         self.running = True
         self.pause_grid = False
@@ -42,8 +42,10 @@ class Game:
             if event.type == pg.MOUSEBUTTONDOWN:
                 if self.window_state == "menu" and self.menu.api_connection:
                     self.window_state = self.menu.click(pg.mouse.get_pos())
-                    
-                    if self.window_state == "update_board":
+
+                    if self.window_state == "board":
+                        self.scoreboard.update_player_names()
+                    elif self.window_state == "update_board":
                             self.board.init_tiles()
                             self.pause_grid = False
                             self.game_state = ""

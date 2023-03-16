@@ -77,9 +77,9 @@ def get_all_users():
 
     return jsonify({'users': output})
 
-@app.route('/user/<public_id>', methods=['GET'])
-def get_one_user(public_id):
-    user = User.query.filter_by(public_id=public_id).first()
+@app.route('/user/<username>', methods=['GET'])
+def get_one_user(username):
+    user = User.query.filter_by(name=username).first()
 
     if not user:
         return jsonify({'message': 'No user found.'})
@@ -151,7 +151,7 @@ def add_score(current_user):
 
     return jsonify({'message': 'New score added.'})
 
-@app.route('/score', methods=['GET'])
+@app.route('/scores', methods=['GET'])
 def get_all_scores():
     scores = Score.query.all()
 
@@ -166,9 +166,23 @@ def get_all_scores():
 
     return jsonify({'scores': output})
 
+@app.route('/score', methods=['GET'])
+@token_required
+def get_user_score(current_user):
+    scores = Score.query.filter_by(user_id=current_user.public_id).order_by(Score.date.desc()).limit(10).all()
+
+    output = []
+    for score in scores:
+        score_data = {}
+        score_data['date'] = score.date
+        score_data['score'] = score.score
+        output.append(score_data)
+
+    return jsonify({'scores': output})
+
 @app.route('/score/<grid_size>', methods=['GET'])
 @token_required
-def get_user_score(current_user, grid_size):
+def get_user_grid_score(current_user, grid_size):
     scores = Score.query.filter_by(user_id=current_user.public_id, grid_size=grid_size).order_by(Score.date.desc()).all()
 
     output = []
