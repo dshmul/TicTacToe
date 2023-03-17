@@ -115,7 +115,10 @@ class Menu:
 
     def draw_menu(self):
         try: 
-            requests.get(config.API_ADDR + "/")
+            reply = requests.get(config.API_ADDR + "/")
+            if reply.status_code != 200:
+                raise Exception("Unable to access API.")
+            
             self.window.blit(self.title, self.title_rect)
             self.api_connection = True
 
