@@ -11,7 +11,7 @@ Implemented using python3, pygame, and flask.
 python3
 ```
 
-### Installing
+### Installing Dependencies
 ```
 pip install -r requirements.txt
 ```
