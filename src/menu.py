@@ -1,5 +1,8 @@
 from src import config
 from src.inputBox import InputBox
+from src.imageButton import ImageButton
+from src.textButton import TextButton
+from src.text import Text
 from src.user import User
 import pygame as pg
 import requests
@@ -22,28 +25,18 @@ class Menu:
 
         # General Surfaces
         self.title_img = pg.image.load(os.path.join('assets', 'tictactoe.png'))
-        self.title = pg.transform.scale(self.title_img, (self.title_img.get_width() * Menu.TITLE_SCALE_FACTOR,\
-                                                        self.title_img.get_height() * Menu.TITLE_SCALE_FACTOR))
-        self.title_rect = self.title.get_rect()
-        self.title_rect.center = (config.WINDOW_WIDTH // 2, 100)
-
+        self.title = ImageButton(self.title_img, self.title_img.get_width() * Menu.TITLE_SCALE_FACTOR, \
+                                 self.title_img.get_height() * Menu.TITLE_SCALE_FACTOR, config.WINDOW_WIDTH // 2, 100)
         self.title_gray_img = pg.image.load(os.path.join('assets', 'tictactoe_gray.png'))
-        self.title_gray = pg.transform.scale(self.title_gray_img, (self.title_gray_img.get_width() * Menu.TITLE_SCALE_FACTOR,\
-                                                                   self.title_gray_img.get_height() * Menu.TITLE_SCALE_FACTOR))
-        self.title_gray_rect = self.title.get_rect()
-        self.title_gray_rect.center = (config.WINDOW_WIDTH // 2, 100)
+        self.title_gray = ImageButton(self.title_gray_img, self.title_img.get_width() * Menu.TITLE_SCALE_FACTOR, \
+                                 self.title_img.get_height() * Menu.TITLE_SCALE_FACTOR, config.WINDOW_WIDTH // 2, 100)
 
         self.start_img = pg.image.load(os.path.join('assets', 'start.png'))
-        self.start_button = pg.transform.scale(self.start_img, (self.start_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
-                                                                self.start_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR))
-        self.start_button_rect = self.start_button.get_rect()
-        self.start_button_rect.center = (config.WINDOW_WIDTH // 2, 635)
-        
+        self.start_button = ImageButton(self.start_img, self.start_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
+                                        self.start_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR, config.WINDOW_WIDTH // 2, 635)        
         self.start_gray_img = pg.image.load(os.path.join('assets', 'start_gray.png'))
-        self.start_gray_button = pg.transform.scale(self.start_gray_img, (self.start_gray_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
-                                                                          self.start_gray_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR))
-        self.start_gray_button_rect = self.start_gray_button.get_rect()
-        self.start_gray_button_rect.center = (config.WINDOW_WIDTH // 2, 635)
+        self.start_gray_button = ImageButton(self.start_gray_img, self.start_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
+                                        self.start_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR, config.WINDOW_WIDTH // 2, 635)
 
         # Surfaces before login
         self.username1_input = InputBox(config.WINDOW_WIDTH * 0.25, 250, 200, 50, "username") 
@@ -51,29 +44,15 @@ class Menu:
         self.password1_input = InputBox(config.WINDOW_WIDTH * 0.25, 315, 200, 50, "password")
         self.password2_input = InputBox(config.WINDOW_WIDTH * 0.75, 315, 200, 50, "password")
 
-        self.register1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.register1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 380)
-        self.register2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.register2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 380)
-
-        self.register1_text = config.HEADER_FONT.render("Register", True, config.BLACK)
-        self.register1_text_rect = self.register1_text.get_rect()
-        self.register1_text_rect.center = self.register1_button_rect.center
-        self.register2_text = config.HEADER_FONT.render("Register", True, config.BLACK)
-        self.register2_text_rect = self.register2_text.get_rect()
-        self.register2_text_rect.center = self.register2_button_rect.center
-                
-        self.guest1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.guest1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 445)
-        self.guest2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.guest2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 445)
-
-        self.guest1_text = config.HEADER_FONT.render("Guest", True, config.BLACK)
-        self.guest1_text_rect = self.guest1_text.get_rect()
-        self.guest1_text_rect.center = self.guest1_button_rect.center
-        self.guest2_text = config.HEADER_FONT.render("Guest", True, config.BLACK)
-        self.guest2_text_rect = self.guest2_text.get_rect()
-        self.guest2_text_rect.center = self.guest2_button_rect.center
+        self.register1_button = TextButton("Register", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                           200, 50, config.WINDOW_WIDTH * 0.25, 380, 25, True)
+        self.register2_button = TextButton("Register", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                           200, 50, config.WINDOW_WIDTH * 0.75, 380, 25, True)
+        
+        self.guest1_button = TextButton("Guest", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                        200, 50, config.WINDOW_WIDTH * 0.25, 445, 25, True)
+        self.guest2_button = TextButton("Guest", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                        200, 50, config.WINDOW_WIDTH * 0.75, 445, 25, True)
 
         # Surfaces after login
         self.cover1_rect = pg.Rect((0, 0), (275, 275))
@@ -81,45 +60,27 @@ class Menu:
         self.cover2_rect = pg.Rect((0, 0), (275, 275))
         self.cover2_rect.center = (config.WINDOW_WIDTH * 0.75, 345)
 
-        self.username1_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK)
-        self.username1_text_rect = self.username1_text.get_rect()
-        self.username1_text_rect.center = (config.WINDOW_WIDTH * 0.25, 315)
-        self.username2_text = config.HEADER_FONT.render("PLACEHOLDER", True, config.BLACK) 
-        self.username2_text_rect = self.username2_text.get_rect()
-        self.username2_text_rect.center = (config.WINDOW_WIDTH * 0.75, 315)
+        self.username1 = Text("PLACEHOLDER", config.HEADER_FONT, config.BLACK, config.WINDOW_WIDTH * 0.25, 315)
+        self.username2 = Text("PLACEHOLDER", config.HEADER_FONT, config.BLACK, config.WINDOW_WIDTH * 0.75, 315)
 
-        self.logout1_button_rect = pg.Rect((0, 0), (200, 50))
-        self.logout1_button_rect.center = (config.WINDOW_WIDTH * 0.25, 380)
-        self.logout2_button_rect = pg.Rect((0, 0), (200, 50))
-        self.logout2_button_rect.center = (config.WINDOW_WIDTH * 0.75, 380)
-
-        self.logout1_text = config.HEADER_FONT.render("Logout", True, config.BLACK)
-        self.logout1_text_rect = self.logout1_text.get_rect()
-        self.logout1_text_rect.center = self.logout1_button_rect.center
-        self.logout2_text = config.HEADER_FONT.render("Logout", True, config.BLACK)
-        self.logout2_text_rect = self.logout2_text.get_rect()
-        self.logout2_text_rect.center = self.logout2_button_rect.center
+        self.logout1_button = TextButton("Logout", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                         200, 50, config.WINDOW_WIDTH * 0.25, 380, 25, True)
+        self.logout2_button = TextButton("Logout", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+                                         200, 50, config.WINDOW_WIDTH * 0.75, 380, 25, True)
 
         # Surfaces for grid size selection
-        self.grid_3_button_rect = pg.Rect((0, 0), (75, 50))
-        self.grid_3_button_rect.center = (config.WINDOW_WIDTH * 0.4, 540)
-        self.grid_10_button_rect = pg.Rect((0, 0), (75, 50))
-        self.grid_10_button_rect.center = (config.WINDOW_WIDTH * 0.6, 540)
-
-        self.grid_3_text = config.HEADER_FONT.render("3x3", True, config.BLACK)
-        self.grid_3_text_rect = self.grid_3_text.get_rect()
-        self.grid_3_text_rect.center = self.grid_3_button_rect.center
-        self.grid_10_text = config.HEADER_FONT.render("10x10", True, config.BLACK)
-        self.grid_10_text_rect = self.grid_10_text.get_rect()
-        self.grid_10_text_rect.center = self.grid_10_button_rect.center
-
+        self.grid3_button = TextButton("3x3", config.HEADER_FONT, config.BLACK, config.GRAY, \
+                                       75, 50, config.WINDOW_WIDTH * 0.4, 540, 25, True)
+        self.grid10_button = TextButton("10x10", config.HEADER_FONT, config.BLACK, config.GRAY, \
+                                       75, 50, config.WINDOW_WIDTH * 0.6, 540, 25, True)
+        
     def draw_menu(self):
         try: 
             reply = requests.get(config.API_ADDR + "/")
             if reply.status_code != 200:
                 raise Exception("Unable to access API.")
             
-            self.window.blit(self.title, self.title_rect)
+            self.title.draw(self.window)
             self.api_connection = True
 
             if self.player1.logged_in:
@@ -127,53 +88,44 @@ class Menu:
             if self.player2.logged_in:
                 self.player2.validate_token()
         except:
-            self.window.blit(self.title_gray, self.title_gray_rect)
+            self.title_gray.draw(self.window)
             self.api_connection = False
 
         if self.start_game and self.api_connection and self.player1.logged_in and self.player2.logged_in:
-            self.window.blit(self.start_button, self.start_button_rect)
+            self.start_button.draw(self.window)
         else:
-            self.window.blit(self.start_gray_button, self.start_gray_button_rect)
+            self.start_gray_button.draw(self.window)
 
         pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 2, 210), (config.WINDOW_WIDTH // 2, 485), width=4)
 
         if not self.player1.logged_in:
             self.username1_input.draw(self.window)
             self.password1_input.draw(self.window)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.register1_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.register1_text, self.register1_text_rect)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.guest1_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.guest1_text, self.guest1_text_rect)
+            self.register1_button.draw(self.window)
+            self.guest1_button.draw(self.window)
         else:
             pg.draw.rect(self.window, config.WHITE, self.cover1_rect)
-
-            self.window.blit(self.username1_text, self.username1_text_rect)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.logout1_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.logout1_text, self.logout1_text_rect)
+            
+            self.username1.draw(self.window)
+            self.logout1_button.draw(self.window)
 
         if not self.player2.logged_in:
             self.username2_input.draw(self.window)
             self.password2_input.draw(self.window)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.register2_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.register2_text, self.register2_text_rect)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.guest2_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.guest2_text, self.guest2_text_rect)
+            self.register2_button.draw(self.window)
+            self.guest2_button.draw(self.window)
         else:
             pg.draw.rect(self.window, config.WHITE, self.cover2_rect)
 
-            self.window.blit(self.username2_text, self.username2_text_rect)
-            pg.draw.rect(self.window, config.LIGHT_ORANGE, self.logout2_button_rect, 25, 5, 5, 5, 5)
-            self.window.blit(self.logout2_text, self.logout2_text_rect)
+            self.username2.draw(self.window)
+            self.logout2_button.draw(self.window)
 
         if self.grid_size == 3:
-            pg.draw.rect(self.window, config.BLUE, self.grid_3_button_rect, 25, 5, 5, 5, 5)
-            pg.draw.rect(self.window, config.GRAY, self.grid_10_button_rect, 25, 5, 5, 5, 5)
+            self.grid3_button.draw(self.window, config.BLUE)
+            self.grid10_button.draw(self.window, config.GRAY)
         else:
-            pg.draw.rect(self.window, config.GRAY, self.grid_3_button_rect, 25, 5, 5, 5, 5)
-            pg.draw.rect(self.window, config.BLUE, self.grid_10_button_rect, 25, 5, 5, 5, 5)
-
-        self.window.blit(self.grid_3_text, self.grid_3_text_rect)
-        self.window.blit(self.grid_10_text, self.grid_10_text_rect)
+            self.grid3_button.draw(self.window, config.GRAY)
+            self.grid10_button.draw(self.window, config.BLUE)
         
     def click(self, mouse_pos): 
         x, y = mouse_pos
@@ -210,7 +162,7 @@ class Menu:
             self.password2_input.active = False
         
         if not self.player1.logged_in:
-            if self.register1_button_rect.collidepoint(x, y) and self.username1_input.input and self.password1_input.input:
+            if self.register1_button.button_rect.collidepoint(x, y) and self.username1_input.input and self.password1_input.input:
                 self.player1.register(self.username1_input.input, self.password1_input.input)
 
                 if not self.player1.token:
@@ -219,15 +171,15 @@ class Menu:
                 else:
                     self.username1_input.invalid = False
                     self.password1_input.invalid = False
-            elif self.guest1_button_rect.collidepoint(x, y):
+            elif self.guest1_button.button_rect.collidepoint(x, y):
                 self.player1.register("Guest", "guest")
-            self.username1_text = config.HEADER_FONT.render(self.player1.username, True, config.BLACK)    
+            self.username1.update_text(self.player1.username)
         else:
-            if self.logout1_button_rect.collidepoint(x, y):
+            if self.logout1_button.button_rect.collidepoint(x, y):
                 self.player1.logout()
 
         if not self.player2.logged_in:
-            if self.register2_button_rect.collidepoint(x, y) and self.username2_input.input and self.password2_input.input:
+            if self.register2_button.button_rect.collidepoint(x, y) and self.username2_input.input and self.password2_input.input:
                 self.player2.register(self.username2_input.input, self.password2_input.input)
                 
                 if not self.player2.token:
@@ -236,11 +188,11 @@ class Menu:
                 else:
                     self.username2_input.invalid = False
                     self.password2_input.invalid = False
-            elif self.guest2_button_rect.collidepoint(x, y):
+            elif self.guest2_button.button_rect.collidepoint(x, y):
                 self.player2.register("Guest", "guest")
-            self.username2_text = config.HEADER_FONT.render(self.player2.username, True, config.BLACK)  
+            self.username2.update_text(self.player2.username)
         else:
-            if self.logout2_button_rect.collidepoint(x, y):
+            if self.logout2_button.button_rect.collidepoint(x, y):
                 self.player2.logout()
 
         if self.player1.logged_in and self.player2.logged_in:
@@ -248,13 +200,13 @@ class Menu:
         else:
             self.start_game = False
 
-        if self.grid_size == 10 and self.grid_3_button_rect.collidepoint(x, y):
+        if self.grid_size == 10 and self.grid3_button.button_rect.collidepoint(x, y):
             self.grid_size = 3
             return "update_board"
-        elif self.grid_size == 3 and self.grid_10_button_rect.collidepoint(x, y):
+        elif self.grid_size == 3 and self.grid10_button.button_rect.collidepoint(x, y):
             self.grid_size = 10
             return "update_board"
             
-        if self.start_button_rect.collidepoint(x, y) and self.start_game:
+        if self.start_button.button_rect.collidepoint(x, y) and self.start_game:
             return "board"
         return "menu"
