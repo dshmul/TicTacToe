@@ -41,9 +41,7 @@ class Game:
                 if self.window_state == "menu" and self.menu.api_connection:
                     self.window_state = self.menu.click(pg.mouse.get_pos())
 
-                    if self.window_state == "board":
-                        self.scoreboard.update_player_names()
-                    elif self.window_state == "update_board":
+                    if self.window_state == "update_board":
                             self.board.init_tiles()
                             self.pause_grid = False
                             self.game_state = ""
