@@ -96,7 +96,7 @@ class Scoreboard:
             pg.draw.rect(self.window, config.BLACK, self.player1_button_rect, 1, 5, 5, 5, 5)
             self.draw_text(f"{self.menu.player1.username!r} Scores", config.TEXT_FONT, config.BLACK, self.player1_button_rect.center)
 
-        if self.menu.player2_logged_in:
+        if self.menu.player2.logged_in:
             pg.draw.rect(self.window, config.YELLOW_ORANGE, self.player2_button_rect, 25, 5, 5, 5, 5)
             pg.draw.rect(self.window, config.BLACK, self.player2_button_rect, 1, 5, 5, 5, 5)
             self.draw_text(f"{self.menu.player2.username!r} Scores", config.TEXT_FONT, config.BLACK, self.player2_button_rect.center)
@@ -114,9 +114,9 @@ class Scoreboard:
             return "board"
         elif self.podium_button_rect.collidepoint(x, y):
             self.user = None
-        elif self.player1_button_rect.collidepoint(x, y):
+        elif self.menu.player1.logged_in and self.player1_button_rect.collidepoint(x, y):
             self.user = self.menu.player1
-        elif self.player2_button_rect.collidepoint(x, y):
+        elif self.menu.player2.logged_in and self.player2_button_rect.collidepoint(x, y):
             self.user = self.menu.player2
 
         return "score"
