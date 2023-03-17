@@ -119,8 +119,10 @@ class Menu:
             self.window.blit(self.title, self.title_rect)
             self.api_connection = True
 
-            self.player1.validate_token()
-            self.player2.validate_token()
+            if self.player1.logged_in:
+                self.player1.validate_token()
+            if self.player2.logged_in:
+                self.player2.validate_token()
         except:
             self.window.blit(self.title_gray, self.title_gray_rect)
             self.api_connection = False
