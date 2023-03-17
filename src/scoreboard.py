@@ -1,6 +1,7 @@
 from src import config
-from src.menu import Menu
-from src.inputBox import InputBox
+from src.imageButton import ImageButton
+from src.textButton import TextButton
+from src.text import Text
 import pygame as pg
 import requests
 from datetime import datetime
@@ -21,24 +22,15 @@ class Scoreboard:
         
         # Surfaces
         self.back_img = pg.image.load(os.path.join('assets', 'back.png'))
-        self.back_button = pg.transform.scale(self.back_img, (50, 50))
-        self.back_button_rect = self.back_button.get_rect()
-        self.back_button_rect.center = (50, 650)
+        self.back_button = ImageButton(self.back_img, 50, 50, 50, 650)
 
-        self.player1_button_rect = pg.Rect((0, 0), (175, 50))
-        self.player1_button_border = pg.Rect((0, 0), (175, 50))
-        self.player1_button_rect.center = (200, 650)
-        self.player1_button_border.center = (200, 650)
-
-        self.player2_button_rect = pg.Rect((0, 0), (175, 50))
-        self.player2_button_border = pg.Rect((0, 0), (175, 50))
-        self.player2_button_rect.center = (400, 650)
-        self.player2_button_border.center = (400, 650)
+        self.player1_score_button = TextButton("PLACEHOLDER", config.TEXT_FONT, config.BLACK, config.YELLOW_ORANGE, \
+                                               175, 50, 200, 650, 25, True)
+        self.player2_score_button = TextButton("PLACEHOLDER", config.TEXT_FONT, config.BLACK, config.YELLOW_ORANGE, \
+                                               175, 50, 400, 650, 25, True)
 
         self.podium_img = pg.image.load(os.path.join('assets', 'podium.png'))
-        self.podium_button = pg.transform.scale(self.podium_img, (80, 80))
-        self.podium_button_rect = self.podium_button.get_rect()
-        self.podium_button_rect.center = (550, 650)
+        self.podium_button = ImageButton(self.podium_img, 80, 80, 550, 650)
 
     def format_dt(self, dt_str):
         dt_utc = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S.%f")
@@ -58,6 +50,10 @@ class Scoreboard:
             pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 3, 135), (config.WINDOW_WIDTH // 3, 585), width=4)
             pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 3 * 2, 135), (config.WINDOW_WIDTH // 3 * 2, 585), width=4)
             pg.draw.line(self.window, config.GRAY, (config.WINDOW_WIDTH // 21, 185), (config.WINDOW_WIDTH // 21 * 20, 185), width=4)
+
+            Text("Name", config.HEADER_FONT, config.DARK_GRAY, config.WINDOW_WIDTH // 21 * 4, 160).draw(self.window)
+            Text("Score", config.HEADER_FONT, config.DARK_GRAY, config.WINDOW_WIDTH // 2, 160).draw(self.window)
+            Text("Timestamp", config.HEADER_FONT, config.DARK_GRAY, config.WINDOW_WIDTH // 21 * 17.5, 160).draw(self.window)
 
             self.draw_text("Name", config.HEADER_FONT, config.DARK_GRAY, (config.WINDOW_WIDTH // 21 * 4, 160))
             self.draw_text("Score", config.HEADER_FONT, config.DARK_GRAY, (config.WINDOW_WIDTH // 2, 160))
@@ -89,34 +85,28 @@ class Scoreboard:
                 self.draw_text(entry["score"], config.TEXT_FONT, config.BLACK, (config.WINDOW_WIDTH // 4 * 3 - 75, y))
                 y += 40
             
-        self.window.blit(self.back_button, self.back_button_rect)
+        self.back_button.draw(self.window)
 
         if self.menu.player1.logged_in:
-            pg.draw.rect(self.window, config.YELLOW_ORANGE, self.player1_button_rect, 25, 5, 5, 5, 5)
-            pg.draw.rect(self.window, config.BLACK, self.player1_button_rect, 1, 5, 5, 5, 5)
-            self.draw_text(f"{self.menu.player1.username!r} Scores", config.TEXT_FONT, config.BLACK, self.player1_button_rect.center)
+            self.player1_score_button.update_text(f"{self.menu.player1.username!r} Scores")
+            self.player1_score_button.draw(self.window)
 
         if self.menu.player2.logged_in:
-            pg.draw.rect(self.window, config.YELLOW_ORANGE, self.player2_button_rect, 25, 5, 5, 5, 5)
-            pg.draw.rect(self.window, config.BLACK, self.player2_button_rect, 1, 5, 5, 5, 5)
-            self.draw_text(f"{self.menu.player2.username!r} Scores", config.TEXT_FONT, config.BLACK, self.player2_button_rect.center)
+            self.player2_score_button.update_text(f"{self.menu.player1.username!r} Scores")
+            self.player2_score_button.draw(self.window)
 
-        self.window.blit(self.podium_button, self.podium_button_rect)
-
-    def update_player_names(self):
-        self.player1_username_text = config.TEXT_FONT.render(f"{self.menu.player1.username!r} Scores", True, config.BLACK)
-        self.player2_username_text = config.TEXT_FONT.render(f"{self.menu.player2.username!r} Scores", True, config.BLACK)
+        self.podium_button.draw(self.window)
 
     def click(self, mouse_pos):
         x, y = mouse_pos
-        if self.back_button_rect.collidepoint(x, y):
+        if self.back_button.button_rect.collidepoint(x, y):
             self.user = None
             return "board"
-        elif self.podium_button_rect.collidepoint(x, y):
+        elif self.podium_button.button_rect.collidepoint(x, y):
             self.user = None
-        elif self.menu.player1.logged_in and self.player1_button_rect.collidepoint(x, y):
+        elif self.menu.player1.logged_in and self.player1_score_button.button_rect.collidepoint(x, y):
             self.user = self.menu.player1
-        elif self.menu.player2.logged_in and self.player2_button_rect.collidepoint(x, y):
+        elif self.menu.player2.logged_in and self.player2_score_button.button_rect.collidepoint(x, y):
             self.user = self.menu.player2
 
         return "score"
