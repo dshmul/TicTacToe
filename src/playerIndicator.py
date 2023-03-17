@@ -14,7 +14,7 @@ class PlayerIndicator:
         self.bounding_rect.center = (center_x, center_y) 
 
         if self.marker == "X":
-            self.marker = pg.image.load(os.path.join('s', 'x.png'))
+            self.marker = pg.image.load(os.path.join('assets', 'x.png'))
         elif self.marker == "O":
             self.marker = pg.image.load(os.path.join('assets', 'o.png'))
     
