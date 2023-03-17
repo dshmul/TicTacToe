@@ -20,7 +20,7 @@ class Scoreboard:
         self.user = None
         
         # Surfaces
-        self.back_img = pg.image.load(os.path.join('Assets', 'back.png'))
+        self.back_img = pg.image.load(os.path.join('assets', 'back.png'))
         self.back_button = pg.transform.scale(self.back_img, (50, 50))
         self.back_button_rect = self.back_button.get_rect()
         self.back_button_rect.center = (50, 650)
@@ -35,7 +35,7 @@ class Scoreboard:
         self.player2_button_rect.center = (400, 650)
         self.player2_button_border.center = (400, 650)
 
-        self.podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
+        self.podium_img = pg.image.load(os.path.join('assets', 'podium.png'))
         self.podium_button = pg.transform.scale(self.podium_img, (80, 80))
         self.podium_button_rect = self.podium_button.get_rect()
         self.podium_button_rect.center = (550, 650)

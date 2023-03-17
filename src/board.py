@@ -23,19 +23,19 @@ class Board:
         self.popup = pg.Rect((0, 0), (383, 383))
         self.popup.center = (config.WINDOW_WIDTH // 2, config.WINDOW_WIDTH // 2)
 
-        self.menu_img = pg.image.load(os.path.join('Assets', 'menu.png'))
+        self.menu_img = pg.image.load(os.path.join('assets', 'menu.png'))
         self.menu_button = pg.transform.scale(self.menu_img, (self.menu_img.get_width() * Board.MENU_BUTTON_SCALE_FACTOR,\
                                                               self.menu_img.get_height() * Board.MENU_BUTTON_SCALE_FACTOR))
         self.menu_button_rect = self.menu_button.get_rect()
         self.menu_button_rect.center = (40, 650)
 
-        self.restart_img = pg.image.load(os.path.join('Assets', 'restart.png'))
+        self.restart_img = pg.image.load(os.path.join('assets', 'restart.png'))
         self.restart_button = pg.transform.scale(self.restart_img, (self.restart_img.get_width() * Board.RESTART_BUTTON_SCALE_FACTOR,\
                                                                   self.restart_img.get_height() * Board.RESTART_BUTTON_SCALE_FACTOR))
         self.restart_button_rect = self.restart_button.get_rect()
         self.restart_button_rect.center = (100, 650)
 
-        self.podium_img = pg.image.load(os.path.join('Assets', 'podium.png'))
+        self.podium_img = pg.image.load(os.path.join('assets', 'podium.png'))
         self.podium_button = pg.transform.scale(self.podium_img, (80, 80))
         self.podium_button_rect = self.podium_button.get_rect()
         self.podium_button_rect.center = (550, 650)
@@ -104,9 +104,9 @@ class Board:
             self.window.blit(score_msg, score_msg_rect)
 
             if current_player.marker == 'X':
-                marker_img = pg.image.load(os.path.join('Assets', 'x.png'))
+                marker_img = pg.image.load(os.path.join('assets', 'x.png'))
             elif current_player.marker == 'O':
-                marker_img = pg.image.load(os.path.join('Assets', 'o.png'))
+                marker_img = pg.image.load(os.path.join('assets', 'o.png'))
 
             marker = pg.transform.scale(marker_img, (Board.WINNING_MARKER_SIZE,\
                                                     Board.WINNING_MARKER_SIZE))
@@ -119,14 +119,14 @@ class Board:
             draw_msg_rect.center = (config.WINDOW_WIDTH // 2, 200)
             self.window.blit(draw_msg, draw_msg_rect)
 
-            x_marker_img = pg.image.load(os.path.join('Assets', 'x.png'))
+            x_marker_img = pg.image.load(os.path.join('assets', 'x.png'))
             x_marker = pg.transform.scale(x_marker_img, (Board.WINNING_MARKER_SIZE,\
                                                     Board.WINNING_MARKER_SIZE))
             x_marker_rect = x_marker.get_rect()
             x_marker_rect.center = (config.WINDOW_WIDTH // 2 - 70, config.WINDOW_WIDTH // 2)
             self.window.blit(x_marker, x_marker_rect)
 
-            o_marker_img = pg.image.load(os.path.join('Assets', 'o.png'))
+            o_marker_img = pg.image.load(os.path.join('assets', 'o.png'))
             o_marker = pg.transform.scale(o_marker_img, (Board.WINNING_MARKER_SIZE,\
                                                     Board.WINNING_MARKER_SIZE))
             o_marker_rect = o_marker.get_rect()

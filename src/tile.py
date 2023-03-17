@@ -18,9 +18,9 @@ class Tile:
         pg.draw.rect(window, config.GRAY, self.rect, 4)
 
         if self.marking == 'X':
-            img = pg.image.load(os.path.join('Assets', 'x.png'))
+            img = pg.image.load(os.path.join('assets', 'x.png'))
         elif self.marking == 'O':
-            img = pg.image.load(os.path.join('Assets', 'o.png'))
+            img = pg.image.load(os.path.join('assets', 'o.png'))
         else:
             return
     

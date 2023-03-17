@@ -21,25 +21,25 @@ class Menu:
         self.player2 = User('O')
 
         # General Surfaces
-        self.title_img = pg.image.load(os.path.join('Assets', 'tictactoe.png'))
+        self.title_img = pg.image.load(os.path.join('assets', 'tictactoe.png'))
         self.title = pg.transform.scale(self.title_img, (self.title_img.get_width() * Menu.TITLE_SCALE_FACTOR,\
                                                         self.title_img.get_height() * Menu.TITLE_SCALE_FACTOR))
         self.title_rect = self.title.get_rect()
         self.title_rect.center = (config.WINDOW_WIDTH // 2, 100)
 
-        self.title_gray_img = pg.image.load(os.path.join('Assets', 'tictactoe_gray.png'))
+        self.title_gray_img = pg.image.load(os.path.join('assets', 'tictactoe_gray.png'))
         self.title_gray = pg.transform.scale(self.title_gray_img, (self.title_gray_img.get_width() * Menu.TITLE_SCALE_FACTOR,\
                                                                    self.title_gray_img.get_height() * Menu.TITLE_SCALE_FACTOR))
         self.title_gray_rect = self.title.get_rect()
         self.title_gray_rect.center = (config.WINDOW_WIDTH // 2, 100)
 
-        self.start_img = pg.image.load(os.path.join('Assets', 'start.png'))
+        self.start_img = pg.image.load(os.path.join('assets', 'start.png'))
         self.start_button = pg.transform.scale(self.start_img, (self.start_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
                                                                 self.start_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR))
         self.start_button_rect = self.start_button.get_rect()
         self.start_button_rect.center = (config.WINDOW_WIDTH // 2, 635)
         
-        self.start_gray_img = pg.image.load(os.path.join('Assets', 'start_gray.png'))
+        self.start_gray_img = pg.image.load(os.path.join('assets', 'start_gray.png'))
         self.start_gray_button = pg.transform.scale(self.start_gray_img, (self.start_gray_img.get_width() * Menu.START_BUTTON_SCALE_FACTOR,\
                                                                           self.start_gray_img.get_height() * Menu.START_BUTTON_SCALE_FACTOR))
         self.start_gray_button_rect = self.start_gray_button.get_rect()
