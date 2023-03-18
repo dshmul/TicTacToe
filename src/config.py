@@ -35,4 +35,4 @@ HEADER_FONT = pg.font.Font(pg.font.get_default_font(), HEADER_SIZE)
 TEXT_FONT = pg.font.Font(pg.font.get_default_font(), TEXT_SIZE)
 
 # API 
-API_ADDR = "http://127.0.0.1:5000/"
+API_ADDR = "http://127.0.0.1:8000/"
