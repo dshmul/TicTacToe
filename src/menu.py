@@ -44,14 +44,14 @@ class Menu:
         self.password1_input = InputBox(config.WINDOW_WIDTH * 0.25, 315, 200, 50, "password")
         self.password2_input = InputBox(config.WINDOW_WIDTH * 0.75, 315, 200, 50, "password")
 
-        self.register1_button = TextButton("Register", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+        self.register1_button = TextButton("Register/Login", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
                                            200, 50, config.WINDOW_WIDTH * 0.25, 380, 25, True)
-        self.register2_button = TextButton("Register", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+        self.register2_button = TextButton("Register/Login", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
                                            200, 50, config.WINDOW_WIDTH * 0.75, 380, 25, True)
         
-        self.guest1_button = TextButton("Guest", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+        self.guest1_button = TextButton("Continue as Guest", config.HEADER_FONT, config.LIGHT_ORANGE, config.LIGHT_GRAY, \
                                         200, 50, config.WINDOW_WIDTH * 0.25, 445, 25, True)
-        self.guest2_button = TextButton("Guest", config.HEADER_FONT, config.BLACK, config.LIGHT_ORANGE, \
+        self.guest2_button = TextButton("Continue as Guest", config.HEADER_FONT, config.LIGHT_ORANGE, config.LIGHT_GRAY, \
                                         200, 50, config.WINDOW_WIDTH * 0.75, 445, 25, True)
 
         # Surfaces after login
