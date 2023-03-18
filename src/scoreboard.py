@@ -92,7 +92,7 @@ class Scoreboard:
             self.player1_score_button.draw(self.window)
 
         if self.menu.player2.logged_in:
-            self.player2_score_button.update_text(f"{self.menu.player1.username!r} Scores")
+            self.player2_score_button.update_text(f"{self.menu.player2.username!r} Scores")
             self.player2_score_button.draw(self.window)
 
         self.podium_button.draw(self.window)
